@@ -2,7 +2,7 @@
 import http from 'http';
 
 const server = http.createServer((req, res) => {
-    //    console.log(req);
+    //console.log(req);
     if (req.url === '/') {
         return res.end('welcome to our home page')
     }
