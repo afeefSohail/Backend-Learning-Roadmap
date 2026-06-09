@@ -15,10 +15,12 @@ const __dirname = path.dirname(__filename); // path => 03-Modules
 console.log("File Path => ", __filename);
 console.log("Dir Path => ",__dirname);
 
+const __firstFilePath = path.join(__dirname, '../04-Content/first.txt')
+const __secondFilePath = path.join(__dirname, '../04-Content/second.txt')
 
 //Folder Level: The .. correctly steps out of 03-Modules into 01-node-course.
-const first = readFileSync(path.join(__dirname, '../04-Content/first.txt'), 'utf-8')
-const second = readFileSync(path.join(__dirname, '../04-Content/second.txt'), {encoding: 'utf8' ,  flag: 'r' } ) // r = read flag is default anyhow.
+const first = readFileSync(__firstFilePath, 'utf-8')
+const second = readFileSync(__secondFilePath, {encoding: 'utf8' ,  flag: 'r' } ) // r = read flag is default anyhow.
 console.log("First File Text => ", first);
 console.log("Second File Text => ", second);
 
