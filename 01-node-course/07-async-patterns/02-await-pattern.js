@@ -2,6 +2,24 @@
 import { readFile, writeFile } from 'fs/promises';
 //import { promisify } from 'util';
 
+// => this same work is happing in 'promisify'
+// const getText = function getText(path) {
+//     return new Promise((resolve, reject) => {
+//         readFile(path, 'utf8'/*{encoding: 'utf8'}*/, (err, data) => {
+//             if (err) {
+//                 reject(err);
+//             } else {
+//                 resolve(data);
+//             }
+//         })
+//     })
+// }
+
+// getText('./04-Content/first.txt')
+// .then((result) => console.log(result))
+// .catch((err) => console.log(err))
+
+
 // const readFilePromise = promisify(readFile)
 // const writeFilePromise = promisify(writeFile)
 
@@ -26,20 +44,3 @@ const start = async () => {
 }
 
 start()
-
-// => this same work is happing in 'promisify'
-// const getText = function getText(path) {
-//     return new Promise((resolve, reject) => {
-//         readFile(path, 'utf8'/*{encoding: 'utf8'}*/, (err, data) => {
-//             if (err) {
-//                 reject(err);
-//             } else {
-//                 resolve(data);
-//             }
-//         })
-//     })
-// }
-
-// getText('./04-Content/first.txt')
-// .then((result) => console.log(result))
-// .catch((err) => console.log(err))
