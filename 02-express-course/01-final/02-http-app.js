@@ -22,6 +22,12 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
   
+  if (url === '/about') {
+    res.writeHead(200, { 'content-type': 'text/html' })
+    res.write('<h1>about page</h1>')
+    return res.end()
+  }
+
   // Route 2: Serve the CSS styles (This fixes your bulleted list layout!)
   if (url === '/styles.css') {
     res.writeHead(200, { 'content-type': 'text/css' }); // Tells browser this is code styling
