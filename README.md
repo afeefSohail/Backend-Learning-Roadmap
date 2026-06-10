@@ -1,5 +1,4 @@
-# Node.js_Express.js
-# ---------------- Node.js -------------------.
+# ---------------- Node.js -------------------
 # https://nodejs.org/docs/latest/api/
 # 1. Build-in Modules (OS , PATH, FS, HTTP) 
 # 2. Using CommonJS (require / module.exports)
@@ -21,6 +20,15 @@
 #  -- Browser support available
 #  -- Tree Shaking support available
 #  -- Modern tooling support not available
-# 4. Nodejs Event Loop
+# 4. Data Content (Reading File System)
+# 5. NPM (Node Packge Manager)
+# 6. Nodejs Event Loop
 #  -- (https://www.course-api.com/)
+# 7. Async Patterens
+# 8. Events
+# 9. Streams 
+------------------------------------------------
+# ++++++++++++++ Express +++++++++++++++
+ It provides a structured "routing" layer that saves developers from writing hundreds of lines of repetitive code to handle HTTP methods and URL paths. It remains the "de facto" standard for building APIs in the JavaScript ecosystem.
+
 

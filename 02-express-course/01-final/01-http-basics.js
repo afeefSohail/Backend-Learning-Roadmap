@@ -2,7 +2,7 @@ import http from 'node:http';
 
 const server = http.createServer((req, res) => {
 
-    const url = req.url
+    const url = req.url    
     // home page
     if (url === '/') {
         res.writeHead(200, { 'content-type': 'text/html' })
