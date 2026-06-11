@@ -32,5 +32,18 @@
  It provides a structured "routing" layer that saves developers from writing hundreds of lines of repetitive code to handle HTTP methods and URL paths. It remains the "de facto" standard for building APIs in the JavaScript ecosystem.
  # https://expressjs.com/en/5x/starter/installing/
  # 1. commonJS Module
+ # 2. 01-http-basics
+ # 3. 02-http-static-assets (static assets load to server)
+ # 4. 03-express-basics
+ # 5. 04-express-static-assets (static assets load to server)
+ # 6. 🏛️ Server-Side Rendering (SSR)
+ # 7. Api (Http Interface to interact with Data(JSON))
+ # 7. 📱 Client-Side Rendering (CSR)
+ # ----------------------------------------------
+ #                 Api Vs SSR
+ # Api - JSON , SEND DATA , RES.JSON
+ # SSR - TEMPLATE , SEND TEMPLATE , RES.RENDER()
+ # ---------------------------------------------- 
+
 
 

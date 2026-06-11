@@ -6,8 +6,8 @@ import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs'
 
 // ES Modules: 1. Recreate the absolute directory path of your "03-Modules" folder
-const __filename = fileURLToPath(import.meta.url); // path => /Users/afeefsohail/Documents/My Projects/Node.js_Express.js/01-node-course/09-streams/01-create-big-file.js
-const __dirname = path.dirname(__filename); // path => root dir path (09-streams)
+const __filename = fileURLToPath(import.meta.url); // path => /Users/afeefsohail/Documents/My Projects/Node.js_Express.js/02-express-course/01-final/02-http-static-assets.js
+const __dirname = path.dirname(__filename); // path => root dir path (01-final)
 console.log("File Path => ", __filename);
 console.log("Dir Path => ",__dirname);
 
