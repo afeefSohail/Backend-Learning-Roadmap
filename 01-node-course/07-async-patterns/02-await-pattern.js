@@ -2,7 +2,7 @@
 import { readFile, writeFile } from 'fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'path'; 
-
+//import { promisify } from 'util';
 
 // ES Modules: 1. Recreate the absolute directory path of your "03-Modules" folder
 const __filename = fileURLToPath(import.meta.url); // path => /Users/afeefsohail/Documents/My Projects/Node.js_Express.js/01-node-course/07-async-patterns/02-await-pattern.js
@@ -15,7 +15,6 @@ const __firstFilePath = path.join(__dirname,'../04-Content/first.txt');
 const __secondFilePath = path.join(__dirname,'../04-Content/second.txt');
 const __resultFilePath = path.join(__dirname,'../04-Content/result-mind-grenade.txt');
 
-//import { promisify } from 'util';
 
 // => this same work is happing in 'promisify'
 // const getText = function getText(path) {
@@ -30,7 +29,7 @@ const __resultFilePath = path.join(__dirname,'../04-Content/result-mind-grenade.
 //     })
 // }
 
-// getText('./04-Content/first.txt')
+// getText(__firstFilePath)
 // .then((result) => console.log(result))
 // .catch((err) => console.log(err))
 
