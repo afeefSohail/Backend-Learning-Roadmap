@@ -34,7 +34,7 @@ app.listen(port, () => {
 //  backend server (like your Node.js/Express app) takes data, 
 //  injects it directly into an HTML file, and builds the complete, 
 //  fully-styled webpage on the server before sending it over to the user's browser
-//----------- How SSR Works (The Lifecycle) -------------
+//  ----------- How SSR Works (The Lifecycle) -------------
 //  A[User requests a page] --> B[Express Server fetches data from Database]
 //  B --> C[Server renders data inside an HTML Template Engine]
 //  C --> D[Server sends a complete, fully-built HTML file to browser]

@@ -24,5 +24,5 @@ http
     fileStream.on('error', (err) => {
       res.end(err)
     })
-  })
-  .listen(3000)
+    
+  }).listen(3000)

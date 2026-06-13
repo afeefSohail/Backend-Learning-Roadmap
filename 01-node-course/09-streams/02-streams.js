@@ -32,7 +32,7 @@ stream.on('data', (chunk) => {
     console.log(chunk);
 });
 
-// 3. Handle errors safely so your server doesn't crash (like a missing file path)
+// 5. Handle errors safely so your server doesn't crash (like a missing file path)
 stream.on('error', (err) => {
     console.error('Stream Error:', err.message);
 });
