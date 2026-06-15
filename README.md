@@ -44,6 +44,18 @@
  # Api - JSON , SEND DATA , RES.JSON
  # SSR - TEMPLATE , SEND TEMPLATE , RES.RENDER()
  # ---------------------------------------------- 
+ # CRUD => Create(POST) , Read(Get) , Update(PUT), Delete
+# URI (Uniform Resource Identifier)
+# URL (Uniform Resource Locator)
+# All URLs are URIs
+# Anatomy of a URL
+#  https://  localhost:3000  /api/products
+└──┬──┘   └──────┬─────┘  └─────┬──────┘
+Protocol    Authority     Path Location
+
+
+
+
 
 
 
