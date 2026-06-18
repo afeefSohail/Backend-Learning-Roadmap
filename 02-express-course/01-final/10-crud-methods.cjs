@@ -13,6 +13,20 @@ app.use(express.urlencoded({ extended: false })) // Content-Type: application/x-
 // parse json
 app.use(express.json())
 
+// POST => Insert Data By Frontend Input
+app.post('/login', (req, res) => {
+    const { name } = req.body;
+    if (name) {
+        return res
+            .status(200)
+            .send(`<div>Welcome ${name}</div>`)
+    }
+    res.
+        status(401)
+        .send(`<div>Please Provide Credentials</div>`)
+})
+
+
 // Get => Read Data
 app.get('/api/people', (req, res) => {
     res.status(200).json({ success: true, data: people })
@@ -41,7 +55,7 @@ app.get('/api/people/:id', (req, res) => {
 
 
 // POST => Insert Data
-app.post('/api/postman/people', (req, res) => {
+app.post('/api/people/postman', (req, res) => {
     const { name } = req.body
     if (!name) {
         return res
@@ -77,19 +91,6 @@ app.post('/api/postman/people', (req, res) => {
         console.error('File write failed:', error);
         return res.status(500).json({ success: false, msg: 'Failed to write data to file' });
     }
-})
-
-// POST => Insert Data By Frontend Input
-app.post('/login', (req, res) => {
-    const { name } = req.body;
-    if (name) {
-        return res
-            .status(200)
-            .send(`<div>Welcome ${name}</div>`)
-    }
-    res.
-        status(401)
-        .send(`<div>Please Provide Credentials</div>`)
 })
 
 // Put => Update Data

@@ -34,6 +34,8 @@ const products = [
 ]
 const people = [
   { id: 1, name: 'john' },
+  { id: 2, name: 'peter' },
+  { id: 3, name: 'susan' },
   { id: 4, name: 'Sohail Anwar' },
   { id: 5, name: 'Aman Sohail' },
   { id: 6, name: 'Afeef Sohail' },
