@@ -52,6 +52,23 @@
  # SSR - TEMPLATE , SEND TEMPLATE , RES.RENDER()
  # ---------------------------------------------- 
  # CRUD => Create(POST) , Read(Get) , Update(PUT), Delete
+ # ### 📊 HTTP Methods & Request Body Mapping (CRUD)
+
+  When interacting with our HTTP data interfaces, a **Request Body** payload is only included for operations that write or alter server state (`POST`, `PUT`, `PATCH`). `GET` and `DELETE` requests handle all data passing directly through the URL structure.
+
+  | CRUD Operation | HTTP Method | Body Payload? | Data Transfer Pattern |
+  | :--- | :--- | :--- | :--- |
+  | **CREATE** | `POST` | **Yes (Mandatory)** | Sent via `req.body` (JSON or URL-Encoded Form) |
+  | **READ** | `GET` | **No (Forbidden)** | Passed via `req.params` or `req.query` variables |
+  | **UPDATE** | `PUT` / `PATCH` | **Yes (Mandatory)** | Modified key-values passed via `req.body` |
+  | **DELETE** | `DELETE` | **No (Rarely)** | Targeted resource specified directly in the URL path |
+
+  #### 💡 REST API Code Standards:
+  * **Filtering Data (`GET`):** Use query strings instead of bodies.
+    * *Correct:* `GET /api/products?search=sofa` (Handled via `req.query`)
+  * **Targeting Resources (`DELETE` / `PUT`):** Use route parameters.
+    * *Correct:* `DELETE /api/people/1` (Handled via `req.params.id`)
+
  # URI (Uniform Resource Identifier)
  # URL (Uniform Resource Locator)
  # All URLs are URIs

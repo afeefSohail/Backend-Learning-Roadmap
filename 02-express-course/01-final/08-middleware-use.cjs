@@ -5,6 +5,7 @@ const { logger , authorize } = require(path.join(__dirname,'../data.cjs'))
 const port = 3000
 
 // req => Middleware Functions => res
+// app.use([logger, authorize]) => this add middleware from this link http:localhost:3000/
 app.use("/api", [logger, authorize])
  
 app.get('/', (req, res) => {

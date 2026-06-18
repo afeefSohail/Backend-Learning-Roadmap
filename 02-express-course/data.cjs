@@ -34,10 +34,12 @@ const products = [
 ]
 const people = [
   { id: 1, name: 'john' },
-  { id: 2, name: 'peter' },
-  { id: 3, name: 'susan' },
-  { id: 4, name: 'anna' },
-  { id: 5, name: 'emma' },
+  { id: 4, name: 'Sohail Anwar' },
+  { id: 5, name: 'Aman Sohail' },
+  { id: 6, name: 'Afeef Sohail' },
+  { id: 7, name: 'Shahab Sohail' },
+  { id: 8, name: 'Izhaan Afeef' },
+  { id: 9, name: 'Arham Afeef' }
 ]
 
 // req => middleware => res
