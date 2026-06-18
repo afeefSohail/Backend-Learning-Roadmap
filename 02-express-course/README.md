@@ -96,6 +96,49 @@ When interacting with HTTP data interfaces, a **Request Body** payload is only i
 
 ---
 
+## 🔀 4. Modular Routing Tier & MVC Code Links
+
+To avoid an unmaintainable `app.js` file, routes are decoupled using `express.Router()` and bound cleanly to individual controller callbacks. 
+
+### 📡 The Main Assembly Tier (`app.js`)
+Maps base routing prefixes to your standalone route modules. **Braces `{}` are omitted** during import to capture the whole router instance correctly:
+```javascript
+const express = require('express');
+const app = express();
+
+const peopleRouter = require('./04-routes/people.cjs');
+const authRouter = require('./04-routes/auth.cjs');
+
+// Base endpoints linking straight into modular files
+app.use('/api/people', peopleRouter);
+app.use('/login', authRouter);
+```
+
+### 🛣️ The Sub-Route Definitions (`04-routes/people.cjs`)
+Imports function triggers via object destructuring from your controllers file and sets path variables without duplicating the base endpoint prefix:
+```javascript
+const express = require('express');
+const router = express.Router();
+const {
+    getPeople,
+    getPerson,
+    createPersonPostman,
+    updatePerson,
+    deletePerson
+} = require('../05-controllers/people.cjs');
+
+// Base paths are shorthand options matching up to '/api/people'
+router.get('/', getPeople);
+router.get('/:id', getPerson);
+router.post('/postman', createPersonPostman);
+router.put('/:id', updatePerson);
+router.delete('/:id', deletePerson);
+
+module.exports = router;
+```
+
+---
+
 ## 💾 Advanced Controller Architecture: Synchronous Code-Splicing
 
 To bridge the gap between volatile memory caching and hard database files during development, the controllers execute deep file mutations using native `fs` sync read/write streams. This eliminates background event-loop race conditions and ensures concurrent transactions remain consistent.
@@ -137,3 +180,7 @@ The frontend application uses a **CDN Script Tag** with cryptographic Subresourc
 <script src="https://cloudflare.com" integrity="..." crossorigin="anonymous"></script>
 ```
 * **Axios vs Fetch Advantage:** Axios provides automated JSON serialization/parsing pipelines, safe runtime handling by implicitly executing errors into `.catch()` parameters on bad status responses (4xx/5xx), and eliminates raw input text data stringifying boilerplate scripts.
+
+---
+## 🏁 Final Project Status
+All sections of the **John Smilga Express Framework Architecture** block have been fully tracked, tested, decoupled using modular **MVC Routing Rules**, and successfully executed. Ready to scale out to enterprise database layers next!
