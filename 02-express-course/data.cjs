@@ -39,4 +39,34 @@ const people = [
   { id: 4, name: 'anna' },
   { id: 5, name: 'emma' },
 ]
-module.exports = { products, people }
+
+// req => middleware => res
+const logger = (req, res, next) => {
+  const method = req.method
+  const url = req.url
+  const time = new Date().getFullYear()
+  console.log(method, url)
+  //res.send('NEXT') 
+  next()
+}
+
+const authorize = (req, res, next) => {
+
+  const { method, url } = req;
+
+  //http://localhost:3000/?user=afeef
+                  //      └──┬──────┘
+                  //  This is the Query!
+  // req.query = {  user: 'afeef' }
+  const { user } = req.query;
+
+  if (user === 'afeef') {
+    req.user = { name: 'afeef', id: 1992 }
+    next()
+  }
+  else {
+    res.status(418).send('<h1> Unauthorized Access </h1>');
+  }
+}
+
+module.exports = { products, people, logger, authorize }

@@ -1,3 +1,6 @@
+// https://hn.algolia.com/api
+// you cannot send multiple response in same request.
+
 const express = require('express');
 const path = require('path');
 const { products } = require(path.join(__dirname,'../data.cjs'))
@@ -15,7 +18,7 @@ app.get('/api/products', (req, res) => {
         return {id, name, image}
     })
 
-   return res.json(newProducts)
+    res.json(newProducts)
 })
 
 // Route Parameters
@@ -26,14 +29,11 @@ app.get('/api/products/:productID', (req, res) => {
     const singleProduct = products.find((product) => product.id === Number(productID) )
     
     if (!singleProduct) {
+        console.log(singleProduct);
         return res.status(404).send('Product Doest not Exist')
     }
 
     res.json(singleProduct)
-})
-
-app.get('/api/v1/query', (req, res) => {
-    
 })
 
 app.get('/api/products/:productID/reviews/:reviewID', (req, res) => {
@@ -41,10 +41,31 @@ app.get('/api/products/:productID/reviews/:reviewID', (req, res) => {
     res.send('hello world')
 })
 
+app.get('/api/v1/query', (req, res) => {
+    //http://localhost:3000/api/v1/query?search=a&limit=2
+    console.log(req.query); // [Object: null prototype] { search: 'a', limit: '2' }
+    const { search, limit } = req.query
+    let soretedproducts = [...products]
+
+    if (search) {
+        soretedproducts = soretedproducts.filter((product) => {
+            return product.name.startsWith(search)
+        })
+    }
+
+    if (limit) {
+        soretedproducts = soretedproducts.slice(0, Number(limit))
+    }
+    
+    if (soretedproducts.length > 0) {
+        return res.status(200).json(soretedproducts)
+    }
+
+    res.status(200).json({success: true, data:[]})
+})
+
+
 
 app.listen(port, () => {
     console.log(`Server is listening on http://localhost:${port}/`);
 })
-
-
-// => https://hn.algolia.com/api
