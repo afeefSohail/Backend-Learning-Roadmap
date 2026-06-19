@@ -4,13 +4,19 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-     "start": "node",
-    "dev": "nodemon --ignore ../data.cjs"
+    "start": "node",
+    "dev": "nodemon --ignore ./data.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
+  "imports": {
+    "#data": "./data.js",
+    "#routes/*": "./04-routes/*.js",
+    "#controllers/*": "./05-controllers/*",
+    "#utils/*": "./06-utils/*.js"
+  },
   "dependencies": {
     "express": "^5.2.1"
   },

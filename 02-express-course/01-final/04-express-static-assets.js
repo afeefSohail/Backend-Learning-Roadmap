@@ -1,5 +1,6 @@
-const express = require('express')
-const path = require('path')
+import express from 'express';
+import path from 'node:path';
+import { getPaths } from '#utils/path';
 
 const app = express();
 const port = 3000;
@@ -10,6 +11,9 @@ loads correctly no matter where you or
 your deployment server launch the terminal, 
 always tie it to __dirname using path.join() 
 */
+// 🌟 Get your local __dirname instantly for this specific file!
+const { __dirname } = getPaths(import.meta.url);
+
 
 // setup static assets with express middleware
 app.use(express.static(path.join(__dirname, '../02-navbar-app')))

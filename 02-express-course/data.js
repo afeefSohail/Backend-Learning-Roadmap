@@ -73,4 +73,4 @@ const authorize = (req, res, next) => {
   }
 }
 
-module.exports = { products, people, logger, authorize }
+export { products, people, logger, authorize }

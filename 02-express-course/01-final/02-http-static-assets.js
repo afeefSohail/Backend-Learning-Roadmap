@@ -2,14 +2,12 @@
 // const { readFileSync } = require('fs')
 import http from 'node:http';
 import path from 'node:path';
+import { getPaths } from '#utils/path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs'
 
-// ES Modules: 1. Recreate the absolute directory path of your "03-Modules" folder
-const __filename = fileURLToPath(import.meta.url); // path => /Users/afeefsohail/Documents/My Projects/Node.js_Express.js/02-express-course/01-final/02-http-static-assets.js
-const __dirname = path.dirname(__filename); // path => root dir path (01-final)
-console.log("File Path => ", __filename);
-console.log("Dir Path => ",__dirname);
+// ES Modules:
+const { __dirname } = getPaths(import.meta.url);
 
 // get all files
 const homePage = readFileSync(path.resolve(__dirname, '../02-navbar-app/index.html'))

@@ -1,14 +1,13 @@
-const express = require('express')
-const path = require('path');
+import express from 'express'
 const router = express.Router()
 
-const  {
+import {
     getPeople,
     getPerson,
     createPersonPostman,
     updatePerson,
     deletePerson
-} = require(path.join(__dirname, '../05-controllers/people.cjs'))
+} from '#controllers/people.js';
 
 // Base Path => /api/people for router
 
@@ -23,4 +22,4 @@ router.route('/:id').get(getPerson).put(updatePerson).delete(deletePerson)
 router.route('/postman').post(createPersonPostman)
 
 
-module.exports = router
+export default router

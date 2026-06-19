@@ -1,12 +1,12 @@
-const express = require('express')
-const path = require('path');
+import express from 'express'
+import path from 'node:path';
+import peopleRouter from '#routes/people';
+import authRouter from '#routes/auth';
+import { getPaths } from '#utils/path';
+
 const app = express()
 const port = 3000
-
-const peoplePath = path.join(__dirname, '../04-routes/people.cjs');
-const people = require(peoplePath)
-const authPath = path.join(__dirname, '../04-routes/auth.cjs');
-const auth = require(authPath)
+const { __dirname } = getPaths(import.meta.url);
 
 // static assets
 app.use(express.static(path.join(__dirname, '../03-method-public')))
@@ -15,8 +15,8 @@ app.use(express.urlencoded({ extended: false }))
 // parse json
 app.use(express.json())
 
-app.use('/api/people', people)
-app.use('/login', auth)
+app.use('/api/people', peopleRouter)
+app.use('/login', authRouter)
 
 app.listen(port, () => {
     console.log(`Server is listening on http://localhost:${port}/`);

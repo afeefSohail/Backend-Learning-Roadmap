@@ -1,10 +1,13 @@
-const express = require('express');
-const { readFileSync, writeFileSync } = require('fs');
-const path = require('path');
+import express from 'express';
+import path from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { people } from '#data'
+import { getPaths } from '#utils/path';
+
 const app = express()
-const dataFilePath = path.join(__dirname, '../data.cjs');
-let { people } = require(dataFilePath)
 const port = 3000
+const { __dirname } = getPaths(import.meta.url);
+const dataFilePath = path.join(__dirname, '../data.js');
 
 // load static assets
 app.use(express.static(path.join(__dirname, '../03-method-public')))
@@ -151,7 +154,9 @@ app.delete('/api/people/:id', (req, res) => {
     }
 
     const updatedPeople = people.filter((person) => person.id !== Number(id))
-    console.log(updatedPeople);
+       // 🌟 FIX: Modify the array elements in-place instead of overwriting the variable link!
+    people.length = 0;             // 1. Clears out all objects currently in RAM memory
+    people.push(...updatedPeople); // 2. Spreads and inserts the filtered users back into it
 
     try {
 

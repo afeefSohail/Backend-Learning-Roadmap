@@ -1,7 +1,7 @@
 // express middleware are functions that excecute during the request to the server.
 // each middleware functions has access to request and response objects.
 
-const express = require('express');
+import express from 'express';
 const app = express()
 const port = 3000
 

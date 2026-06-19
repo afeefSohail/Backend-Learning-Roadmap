@@ -1,7 +1,10 @@
-const path = require('path');
-const { readFileSync, writeFileSync } = require('fs');
-const dataFilePath = path.join(__dirname, '../data.cjs');
-let { people } = require(dataFilePath)
+import path from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { getPaths } from '#utils/path';
+import { people } from '#data';
+
+const { __dirname } = getPaths(import.meta.url);
+const dataFilePath = path.join(__dirname, '../data.js');
 
 const getPeople = (req, res) => {
     res.status(200).json({ success: true, data: people })
@@ -122,9 +125,10 @@ const deletePerson = (req, res) => {
     }
 
     const updatedPeople = people.filter((person) => person.id !== Number(id))
-    people = updatedPeople;
-    console.log(people);
-
+    // 🌟 FIX: Modify the array elements in-place instead of overwriting the variable link!
+    people.length = 0;             // 1. Clears out all objects currently in RAM memory
+    people.push(...updatedPeople); // 2. Spreads and inserts the filtered users back into it
+    
     try {
 
         // 2. Read the entire raw code text from your physical file layout
@@ -156,7 +160,7 @@ const deletePerson = (req, res) => {
     }
 }
 
-module.exports = {
+export {
     getPeople,
     getPerson,
     createPersonPostman,

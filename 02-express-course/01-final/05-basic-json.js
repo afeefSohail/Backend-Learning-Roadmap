@@ -1,6 +1,5 @@
-const express = require('express');
-const path = require('path');
-const { products } = require(path.join(__dirname,'../data.cjs'))
+import express from 'express';
+import { products } from '#data';
 const app = express()
 const port = 3000
 

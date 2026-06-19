@@ -10,4 +10,4 @@ const login = (req, res) => {
         .send(`<div>Please Provide Credentials</div>`)
 }
 
-module.exports = login
+export { login }

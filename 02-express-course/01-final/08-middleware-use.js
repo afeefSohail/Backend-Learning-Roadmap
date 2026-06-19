@@ -1,7 +1,6 @@
-const express = require('express');
+import express from 'express';
+import { logger , authorize } from '#data';
 const app = express()
-const path = require('path');
-const { logger , authorize } = require(path.join(__dirname,'../data.cjs'))
 const port = 3000
 
 // req => Middleware Functions => res
