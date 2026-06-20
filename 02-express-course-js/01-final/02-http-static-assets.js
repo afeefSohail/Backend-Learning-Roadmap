@@ -1,7 +1,6 @@
 import http from 'node:http';
 import path from 'node:path';
 import { getPaths } from '#utils/path';
-import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs'
 
 // ES Modules:

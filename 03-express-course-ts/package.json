@@ -1,8 +1,27 @@
 {
+  "name": "03-express-course-ts",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/app.ts", 
+  "scripts": {
+    "start": "node dist/app.js",
+    "dev": "tsx watch",
+    "build": "tsc"
+  },
+  "imports": {
+    "#data": "./src/data.ts",
+    "#routes/*": "./src/04-routes/*.ts",
+    "#controllers/*": "./src/05-controllers/*",
+    "#utils/*": "./src/06-utils/*.ts"
+  },
+
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^26.0.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
   }
 }
