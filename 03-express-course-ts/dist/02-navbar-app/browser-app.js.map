@@ -1,0 +1,1 @@
+{"version":3,"file":"browser-app.js","sourceRoot":"","sources":["../../src/02-navbar-app/browser-app.ts"],"names":[],"mappings":"AAAA,MAAM,SAAS,GAAG,QAAQ,CAAC,aAAa,CAAC,aAAa,CAAC,CAAA;AACvD,MAAM,KAAK,GAAG,QAAQ,CAAC,aAAa,CAAC,QAAQ,CAAC,CAAA;AAE9C,SAAS,EAAE,gBAAgB,CAAC,OAAO,EAAE,GAAG,EAAE;IACtC,KAAK,EAAE,SAAS,CAAC,MAAM,CAAC,YAAY,CAAC,CAAA;AACzC,CAAC,CAAC,CAAA"}
