@@ -1,5 +1,3 @@
-// const http = require('http')
-// const { readFileSync } = require('fs')
 import http from 'node:http';
 import path from 'node:path';
 import { getPaths } from '#utils/path';
