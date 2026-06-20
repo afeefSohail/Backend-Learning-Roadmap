@@ -7,7 +7,7 @@ A comprehensive hands-on developer workbook tracking advanced routing paradigms,
 ## 📂 Project Directory Architecture
 
 ```text
-📁 02-express-course
+📁 02-express-course-js
     │
     ├── 📁 01-final                  # Instructor reference tier (Completed code evolutions)
     │   ├── 📄 01-http-basics.js
