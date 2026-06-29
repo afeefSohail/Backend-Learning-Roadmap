@@ -48,7 +48,7 @@ Structuring maintainable, modular backend delivery networks.
 ---
 
 ## 🛠️ Current Development Focus
-I am currently setting up the **`05-POSTGRESQL-PRISMA`** workspace directory. The objective is to phase out transient in-memory database arrays and replace them with a permanent, relational, type-safe data infrastructure layer.
+I am currently setting up the **`05-Relational_Data_Layer`** workspace directory. The objective is to phase out transient in-memory database arrays and replace them with a permanent, relational, type-safe data infrastructure layer.
 
 ---
 *Note: This roadmap file is actively updated as each system architecture phase transitions into production-ready deployment status.*
