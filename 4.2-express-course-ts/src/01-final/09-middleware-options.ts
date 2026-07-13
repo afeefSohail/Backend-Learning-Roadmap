@@ -14,9 +14,9 @@ const port: number = 3000
 // 2.3.1 - morgan('tiny') is a third-party Express middleware that automatically logs 
 // 2.3.1 - your server's incoming HTTP requests to your terminal in a single, short, pre-formatted string
 
-// app.use("/api", [logger, authorize]) // use vs route
-// app.use(express.static('./public')) // express
-// app.use(morgan('tiny')) // third party
+// app.use("/api", [logger, authorize]) // use vs route => Application-level Custom
+// app.use(express.static('./public')) // express => Middleware, Built-in Middleware
+// app.use(morgan('tiny')) // third party => Third-party Middleware
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Home')

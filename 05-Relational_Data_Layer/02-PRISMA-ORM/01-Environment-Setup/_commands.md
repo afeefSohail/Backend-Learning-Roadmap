@@ -47,3 +47,11 @@
 ### Describe a Specific Table
 
 `\d category`
+
+### Dump Tables SQL with Data
+
+pg_dump -h localhost -p 5432 -U myuser -d mydatabase -F p > backup.sql
+
+### Dump Tables SQL without Data
+
+pg_dump -h localhost -p 5432 -U myuser -d mydatabase --schema-only > schema_backup.sql
