@@ -1,11 +1,140 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
+
+  model Category {
+    id            Int        @id                @default(autoincrement())
+    parent        Category?  @relation("CategoryParent", fields: [parentId], references: [id], onDelete: Cascade)
+    parentId      Int?
+    name          String     @unique
+    slug          String     @unique
+    level         Int        @default(0) 
+    isActive      Boolean    @default(false)
+
+    // 🟢 The Opposite Relation Field!
+    // 🟢 It does not exist as a physical column in PostgreSQL. 
+    // 🟢 It is a virtual TypeScript array allowing you to query a category's Product or subCatgeory.
+    // 🟢 its not compulsory to gave name to your relation
+    subCategory    Category[] @relation("CategoryParent")
+    products      Product[]  @relation("CategoryProducts") 
+
+    // Ensure the table name is lowercase
+    @@map("category") 
+  }
+
+  model PromotionEvent {
+    id                Int        @id         @default(autoincrement())
+    name              String     @unique     @db.VarChar(50) 
+    startDate         DateTime
+    endDate           DateTime   
+    priceReduction    Int
+
+    // 🟢 Manay to Many Relation Ship
+    productPromotions       ProductPromotionEvent[] 
+
+    @@map("promption_event") 
+  } 
+
+  // Middle table for Product and PromotionEvent
+  model ProductPromotionEvent {
+    id                  Int               @id                @default(autoincrement())
+    
+    product             Product           @relation(fields: [productId], references: [id])
+    productId           Int
+
+    promotionEvent      PromotionEvent    @relation(fields: [promotionEventId], references: [id])
+    promotionEventId    Int
+
+    // 🟢 to prevent duplication
+    // 🟢 @@id([promotionEventId, productId]) => Composite Primary Key then i no, need of a autoincrement primary key
+    // 🟢 @@unique([promotionEventId, productId]) => unique promotionEventId vs productId
+    
+    @@map("product_promotion_event")
+  }
+
+  model Product {
+    id              Int         @id                   @default(autoincrement())
+    category        Category    @relation("CategoryProducts", fields:[categoryId], references: [id])
+    categoryId      Int
+    name            String      @unique               @db.VarChar(50)
+    slug            String      @unique               @db.VarChar(55)
+    description     String? 
+    price           Decimal     @db.Decimal(10, 2)     
+    isDigital       Boolean     @default(false)  
+    isActive        Boolean     @default(false)  
+    createdAt       DateTime    @default(now())
+    updatedAt       DateTime?   @updatedAt
+
+    // 🟢 Manay to Many Relation Ship
+    // 🟢 The Opposite Relation Field!
+    // 🟢 It does not exist as a physical column in PostgreSQL. 
+    // 🟢 It is a virtual TypeScript array allowing you to query a product's promotions or orders and stock.
+    productPromotions       ProductPromotionEvent[]
+    stock                   StockManagement?
+    productOrders           OrderProduct[]
+
+    // Ensure the table name is lowercase
+    @@map("product") 
+  }
+
+  model StockManagement {
+    id                  Int         @id    @default(autoincrement()) 
+    product             Product     @relation(fields: [productId], references: [id])
+    productId           Int         @unique
+
+    quantity            Int         @default(0)
+    lastCheckedAt       DateTime    
+
+    @@map("stock_management") 
+  }
+
+  model User {
+    id       Int    @id @default(autoincrement())
+    username String @unique @db.VarChar(50)
+    email    String @unique @db.VarChar(50)
+    password String
+
+    // 🟢 one to Many relation
+    // 🟢 The Opposite Relation Field!
+    // 🟢 It does not exist as a physical column in PostgreSQL. 
+    // 🟢 It is a virtual TypeScript array allowing you to query a User's orders.
+    orders   Order[]
+
+    @@map("user")
+  }
+
+  model Order {
+    id            Int         @id                @default(autoincrement())
+    user          User        @relation(fields: [userId],   references: [id])
+    userId        Int
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime?   @updatedAt
+
+    // 🟢 Manay to Many Relation Ship
+    // 🟢 The Opposite Relation Field!
+    // 🟢 It does not exist as a physical column in PostgreSQL. 
+    // 🟢 It is a virtual TypeScript array allowing you to query a orders's products.
+    orderProducts OrderProduct[]
+
+    @@map("order") 
+  }
+
+  model OrderProduct {
+    id            Int        @id                @default(autoincrement())
+    
+    order         Order      @relation(fields: [orderId], references: [id])
+    orderId        Int
+
+    product       Product    @relation(fields: [productId], references: [id])
+    productId     Int
+
+    quantity      Int
+
+    @@map("order_product")
+  }

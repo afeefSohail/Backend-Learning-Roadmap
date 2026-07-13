@@ -49,3 +49,5 @@
    - ORM stands for Object-Relational Mapping.
    - In the context of Prisma, it acts as a highly advanced translator bridge 
    between your object-oriented application code (TypeScript/JavaScript) and your relational storage tables (PostgreSQL).
+   - By Default Prisma Models fields are Required.
+   - 

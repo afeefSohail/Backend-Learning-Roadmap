@@ -2,7 +2,7 @@ name: Express Project
 services:
 
   # PostgreSQL Service
-  Postgres:
+  postgres:
     image: postgres:15-alpine
     container_name: postgres_db
     restart: always
@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: mypassword
       POSTGRES_DB: mydatabase
     ports:
-      - "5432:5432" # Expose PostgresSQL on port 5432:5432
+      - "5433:5432" # Expose PostgresSQL on port 5433:5432
 
 # Express API Service
   express-api:
@@ -23,9 +23,9 @@ services:
         - "3000:3000" # Expose Express on port 3000
         - "5556:5555" # Expose Prisma Studio on port 5555
       depends_on:
-        - Postgres # Ensure PostgreSQL starts before Express API
+        - postgres # Ensure PostgreSQL starts before Express API
       environment:
-        DATABASE_URL: "Postgresql://myuser:mypassword@postgres:5432/mydatabase?schema=public"
+        DATABASE_URL: "postgresql://myuser:mypassword@postgres:5432/mydatabase?schema=public"
       volumes:
        - ./express-api:/app # Mount project directory(local express-api) inside the container
        - node_modules:/app/node_modules # named volume instead of an anonymous one
@@ -56,6 +56,8 @@ services:
                 # These are structural keywords from Bash / Shell scripting.  
             fi #fi is simply if spelled backward. it marks the absolute end of the condition.            
           fi
+
+          npx prisma studio -b none --port 5555 &
 
           # Start the Express app
           node index.js  

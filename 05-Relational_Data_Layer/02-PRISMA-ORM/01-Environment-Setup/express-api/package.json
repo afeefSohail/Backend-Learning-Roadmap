@@ -134,7 +134,9 @@
     "wrappy": "^1.0.2",
     "zeptomatch": "^2.1.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/node": "^26.1.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
