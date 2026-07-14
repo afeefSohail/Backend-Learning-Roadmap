@@ -12,19 +12,12 @@ console.log("__dirname => ", __dirname)
 console.log("__filename =>", __filename)
 const rootDir = __dirname;
 
-const isRunningInsideDocker = process.cwd() === "/app";
-
-const activeDatabaseUrl = isRunningInsideDocker
-  ? "postgresql://myuser:mypassword@postgres:5432/mydatabase?schema=public" // 🐳 Used inside Docker Container
-  : "postgresql://myuser:mypassword@localhost:5433/mydatabase?schema=public"; // 💻 Used natively on your Mac Terminal
-    
-console.log("DATABASE_URL =>", activeDatabaseUrl)
 export default defineConfig({
   schema: path.join(rootDir, "prisma", "schema.prisma"),
   migrations: {
     path: path.join(rootDir, "prisma", "migrations"),
   },
   datasource: {
-    url: activeDatabaseUrl, 
+    url: env("DATABASE_URL"), 
   },
 });

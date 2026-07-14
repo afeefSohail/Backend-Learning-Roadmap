@@ -37,6 +37,7 @@ services:
           # -f Means (The File Check)
           if [ -f package.json ]; then
             echo 'Project already exists. Skipping setup...'
+            npm install
           else
             echo 'Project doest exist. Initializing...'
 
@@ -54,27 +55,21 @@ services:
               echo 'app.listen(3000, () => console.log("Server running on port 3000"));' >> index.js
 
                # These are structural keywords from Bash / Shell scripting.  
-            fi #fi is simply if spelled backward. it marks the absolute end of the condition.            
+            fi # fi is simply if spelled backward. it marks the absolute end of the condition.            
           fi
 
 
-          # Check if migration folder exists and delete it (Semicolons removed!)
-          if [ -f "prisma/migrations" ]; then
-            echo 'Deleting existing migration folder...'
-            rm -rf prisma/migrations
+          # Deleting existing migration folder...
+          if [ ! -d "prisma/migrations" ]; then
+            echo 'No migrations found. Creating initial migration...'
+            npx prisma migrate dev --name init
+          else
+            echo 'Applying any pending migrations...'
+            npx prisma migrate deploy
           fi
 
-          # This writes the physical SQL file to disk but skips database resets entirely!
-          echo 'Generating fresh migration folder automatically...'
-          npx prisma migrate dev --name init --create-only --skip-generate --accept-data-loss
-
-          # This production command executes instantly with zero confirmation prompts!
-          echo 'Deploying schema updates to Postgres engine...'
-          npx prisma migrate deploy
-
-          # Generate local TypeScript client autocomplete typings
           npx prisma generate
-
+          
           npx prisma studio -b none --port 5555 &
 
           # Start the Express app
