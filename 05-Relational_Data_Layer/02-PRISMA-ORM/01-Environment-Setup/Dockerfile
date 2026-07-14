@@ -8,5 +8,8 @@ WORKDIR /app
 RUN if [ ! -f package.json ]; then npm init -y; fi
 
 # Install dependencies if packge.json exists or was created
-RUN npm install express prisma @prisma/client
+RUN npm install express dotenv
+RUN npm install prisma @prisma/client @prisma/adapter-pg pg
+RUN npm install swagger-jsdoc swagger-ui-express swagger-autogen 
+RUN npm install nodemon
 
