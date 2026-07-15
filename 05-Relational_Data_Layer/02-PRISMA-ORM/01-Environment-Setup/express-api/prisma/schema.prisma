@@ -24,6 +24,9 @@ datasource db {
     subCategory    Category[] @relation("CategoryParent")
     products      Product[]  @relation("CategoryProducts") 
 
+    // compound unique constraint on `name` or `slug`
+    // @@unique([name, slug]) 
+
     // Ensure the table name is lowercase
     @@map("category") 
   }
