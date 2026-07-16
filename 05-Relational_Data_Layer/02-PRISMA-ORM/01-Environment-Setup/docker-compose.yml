@@ -12,6 +12,10 @@ services:
       POSTGRES_DB: mydatabase
     ports:
       - "5433:5432" # Expose PostgresSQL on port 5433:5432
+    volumes:
+      - ./db-data:/data # going to bind db-data folder with data folder in postgres conatiner
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
 
 # Express API Service
   express-api:
@@ -45,16 +49,9 @@ services:
             # These are structural keywords from Bash / Shell scripting.  
           fi # fi is simply if spelled backward. it marks the absolute end of the condition.            
           
-
-
-          # Deleting existing migration folder...
-          if [ ! -d "prisma/migrations" ]; then
-            echo 'No migrations found. Creating initial migration...'
-            npx prisma migrate dev --name init
-          else
-            echo 'Applying any pending migrations...'
-            npx prisma migrate deploy
-          fi
+          # we dont this migation after automatic seeding by init.sql
+          # echo 'Syncing schema with database...'
+          # npx prisma migrate dev --name auto_sync
 
           npx prisma generate
           

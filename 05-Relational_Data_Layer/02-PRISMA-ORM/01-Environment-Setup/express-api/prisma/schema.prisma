@@ -10,7 +10,7 @@ datasource db {
 
   model Category {
     id            Int        @id                @default(autoincrement())
-    parent        Category?  @relation("CategoryParent", fields: [parentId], references: [id], onDelete: Cascade)
+    parent        Category?  @relation("CategoryParent", fields: [parentId], references: [id])
     parentId      Int?
     name          String     @unique
     slug          String     @unique
@@ -41,7 +41,7 @@ datasource db {
     // 🟢 Manay to Many Relation Ship
     productPromotions       ProductPromotionEvent[] 
 
-    @@map("promption_event") 
+    @@map("promotion_event") 
   } 
 
   // Middle table for Product and PromotionEvent
