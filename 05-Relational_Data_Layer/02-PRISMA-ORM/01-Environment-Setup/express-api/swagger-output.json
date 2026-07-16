@@ -1,18 +1,31 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "My API",
+    "title": "ExpressJS Prisma ORM Fundamentals",
     "description": "Auto-generated Swagger documentation",
     "version": "1.0.0"
   },
   "host": "localhost:3000",
   "basePath": "/",
+  "tags": [
+    {
+      "name": "Category Section",
+      "description": "Endpoints relating to e-commerce category trees and bulk deletions."
+    },
+    {
+      "name": "Product Section",
+      "description": "Endpoints managing inventory products, pricing data, and stock counts."
+    }
+  ],
   "schemes": [
     "http"
   ],
   "paths": {
     "/category/insert": {
       "post": {
+        "tags": [
+          "Category Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -52,6 +65,9 @@
     },
     "/category/bulk-insert": {
       "post": {
+        "tags": [
+          "Category Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -82,6 +98,9 @@
     },
     "/category/update/{id}": {
       "post": {
+        "tags": [
+          "Category Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -130,6 +149,9 @@
     },
     "/category/upsert": {
       "post": {
+        "tags": [
+          "Category Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -169,6 +191,9 @@
     },
     "/category/update-many": {
       "post": {
+        "tags": [
+          "Category Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -208,6 +233,9 @@
     },
     "/category": {
       "post": {
+        "tags": [
+          "Category Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -250,6 +278,9 @@
     },
     "/category/bulk-delete": {
       "delete": {
+        "tags": [
+          "Category Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -283,6 +314,9 @@
     },
     "/category/{id}": {
       "delete": {
+        "tags": [
+          "Category Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -307,6 +341,9 @@
     },
     "/product/stock": {
       "post": {
+        "tags": [
+          "Product Section"
+        ],
         "description": "",
         "parameters": [
           {
@@ -353,8 +390,202 @@
         }
       }
     },
+    "/api/products": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/detail": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/active": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/filter/qp/": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/filter/pp/{isActive}/{categoryId}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/filter/rb": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "isActive": {
+                  "example": "any"
+                },
+                "categoryId": {
+                  "example": "any"
+                },
+                "priceMin": {
+                  "example": "any"
+                },
+                "priceMax": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/active/orderby": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/price": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/pagination": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/categories/linked-to-products": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/user/order": {
       "post": {
+        "tags": [
+          "Product Section"
+        ],
         "description": "",
         "parameters": [
           {

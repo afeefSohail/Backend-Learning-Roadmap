@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-// In Prisma v7, new PrismaClient() without arguments throws exactly this error because the 
-// internal connection engine has been removed — you must pass an adapter, with no fallback. 
-// The prisma-client generator now connects through a driver adapter, so for PostgreSQL you 
+// In Prisma v7, new PrismaClient() without arguments throws exactly this error because the
+// internal connection engine has been removed — you must pass an adapter, with no fallback.
+// The prisma-client generator now connects through a driver adapter, so for PostgreSQL you
 // need to install @prisma/adapter-pg and pass it to the constructor as new PrismaClient({ adapter })
 // npm install @prisma/adapter-pg pg
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 const { PrismaPg } = require("@prisma/adapter-pg");
 const { PrismaClient } = require("@prisma/client");
 
@@ -16,8 +16,9 @@ const adapter = new PrismaPg(pool);
 // Pass the adapter straight into the constructor (Fixes the Prisma 7 validation panic!)
 const prisma = new PrismaClient({ adapter });
 
-// One to One ... (One Product has One StockManagment row) 
+// One to One ... (One Product has One StockManagment row)
 router.post("/product/stock", async (req, res) => {
+  // #swagger.tags = ['Product Section']
   try {
     const {
       categoryId,
@@ -32,7 +33,9 @@ router.post("/product/stock", async (req, res) => {
 
     const product = await prisma.product.create({
       data: {
-        categoryId, name, slug,
+        categoryId,
+        name,
+        slug,
         description,
         isDigital,
         isActive,

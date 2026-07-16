@@ -18,6 +18,7 @@ const prisma = new PrismaClient({ adapter });
 
 // Many to Many Insert ... (user create order and order create order product)
 router.post("/user/order", async (req, res) => {
+  // #swagger.tags = ['Product Section']
   try {
     // Destructuring the request body to extract the necessary fields
     const { username, email, password, products } = req.body;
