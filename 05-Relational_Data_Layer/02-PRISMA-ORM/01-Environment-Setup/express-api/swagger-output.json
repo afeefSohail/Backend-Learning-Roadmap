@@ -567,9 +567,27 @@
           "Filtering Examples"
         ],
         "description": "",
+        "parameters": [
+          {
+            "name": "searchTerm",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "searchType",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

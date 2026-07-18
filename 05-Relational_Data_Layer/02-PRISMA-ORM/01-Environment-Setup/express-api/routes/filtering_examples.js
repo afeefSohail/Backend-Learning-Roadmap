@@ -8,9 +8,10 @@ const router = express.Router();
 const { Pool } = require("pg");
 const { PrismaPg } = require("@prisma/adapter-pg");
 const { PrismaClient, Prisma } = require("@prisma/client");
-const { splitWhere } = require("effect/Chunk");
+const { splitWhere, contains } = require("effect/Chunk");
 const { await } = require("effect/Deferred");
 const { And, Or } = require("effect/ConfigError");
+const { startsWith, endsWith } = require("valibot");
 
 // Create a native PostgreSQL connection pool targeting the internal Docker network address
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -160,9 +161,55 @@ router.post("/api/products/filters/rb", async (req, res) => {
 // Endpoint to search for products using pattern matching
 router.get("/api/products/search/pattern", async (req, res) => {
   // #swagger.tags = ['Filtering Examples']
-
   try {
-  } catch (error) {}
+    // Get Search query from request query params
+    const { searchTerm, searchType } = req.query;
+
+    if (!searchTerm || !searchType) {
+      return res
+        .status(400)
+        .json({ error: "Search Term and Type are required" });
+    }
+
+    let filter = {};
+
+    switch (searchType) {
+      case "contains":
+        filter = { contains: searchTerm };
+        break;
+      case "startsWith":
+        filter = { startsWith: searchTerm };
+        break;
+      case "endsWith":
+        filter = { endsWith: searchTerm };
+        break;
+      default:
+        return res
+          .status(400)
+          .json({
+            error:
+              "Invalid search type. Use 'conatains', 'startsWith', or 'endsWith' ",
+          });
+
+        break;
+    }
+
+    // Perform the search with the selected pattern matching
+    const products = await prisma.product.findMany({
+      where: {
+        name: {
+          ...filter,
+          mode: "insensitive", // case insensitive search
+        },
+      },
+    });
+
+    res.json(products); // Return the search results
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Something went wrong while retrieving the product.", detail: error.message });
+  }
 });
 
 // Endpoint to retrieve products filtered by a list of category IDs
@@ -173,8 +220,9 @@ router.get("/api/products/filter/categories", async (req, res) => {
     const { isActive } = req.query;
     const products = await prisma.product.findMany({});
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+    res
+      .status(500)
+      .json({ error: "Something went wrong", detail: error.message });
   }
 });
 
@@ -185,8 +233,9 @@ router.get("/api/products/between", async (req, res) => {
     const { isActive } = req.query;
     const products = await prisma.product.findMany({});
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+    res
+      .status(500)
+      .json({ error: "Something went wrong", detail: error.message });
   }
 });
 
@@ -197,8 +246,9 @@ router.get("/api/products/slicing", async (req, res) => {
     const { isActive } = req.query;
     const products = await prisma.product.findMany({});
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Something went wrong" });
+    res
+      .status(500)
+      .json({ error: "Something went wrong", detail: error.message });
   }
 });
 
