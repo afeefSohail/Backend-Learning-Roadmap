@@ -17,7 +17,7 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 router.post("/category/insert", async (req, res) => {
-  // #swagger.tags = ['Category Section']
+  // #swagger.tags = ['Data Relational Operation Section']
   try {
     const { name, slug, parentId, isActive, level } = req.body;
 
@@ -43,7 +43,7 @@ router.post("/category/insert", async (req, res) => {
 });
 
 router.post("/category/bulk-insert", async (req, res) => {
-  // #swagger.tags = ['Category Section']
+  // #swagger.tags = ['Data Relational Operation Section']
   try {
     const categories = req.body.categories;
     if (!Array.isArray(categories) || categories.length === 0) {
@@ -68,7 +68,7 @@ router.post("/category/bulk-insert", async (req, res) => {
 });
 
 router.post("/category/update/:id", async (req, res) => {
-  // #swagger.tags = ['Category Section']
+  // #swagger.tags = ['Data Relational Operation Section']
   try {
     const categoryId = parseInt(req.params.id); // Extract the Category ID from URL Parameter
     const { name, slug, parentId, isActive, level } = req.body;
@@ -100,7 +100,7 @@ router.post("/category/update/:id", async (req, res) => {
 });
 
 router.post("/category/upsert", async (req, res) => {
-  // #swagger.tags = ['Category Section']
+  // #swagger.tags = ['Data Relational Operation Section']
   try {
     const { name, slug, parentId, isActive, level } = req.body;
 
@@ -142,7 +142,7 @@ router.post("/category/upsert", async (req, res) => {
 });
 
 router.post("/category/update-many", async (req, res) => {
-  // #swagger.tags = ['Category Section']
+  // #swagger.tags = ['Data Relational Operation Section']
   try {
     const { names, parentId, isActive, level } = req.body;
 
@@ -175,7 +175,7 @@ router.post("/category/update-many", async (req, res) => {
 
 // One to Many ... (One Category with Many Products)
 router.post("/category", async (req, res) => {
-  // #swagger.tags = ['Category Section']
+  // #swagger.tags = ['Data Relational Operation Section']
   try {
     const { name, parentId, slug, isActive, level, products } = req.body;
 
@@ -200,7 +200,7 @@ router.post("/category", async (req, res) => {
 });
 
 router.delete("/category/bulk-delete", async (req, res) => {
-  // #swagger.tags = ['Category Section']
+  // #swagger.tags = ['Data Relational Operation Section']
   try {
     // Extract category IDs from the request body
     const { categoryIds } = req.body;
@@ -237,7 +237,7 @@ router.delete("/category/bulk-delete", async (req, res) => {
 });
 
 router.delete("/category/:id", async (req, res) => {
-  // #swagger.tags = ['Category Section']
+  // #swagger.tags = ['Data Relational Operation Section']
   try {
     const categoryId = parseInt(req.params.id);
 
@@ -258,6 +258,86 @@ router.delete("/category/:id", async (req, res) => {
     });
 
     res.json({ message: "Category deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// One to One ... (One Product has One StockManagment row)
+router.post("/product/stock", async (req, res) => {
+  // #swagger.tags = ['Data Relational Operation Section']
+  try {
+    const {
+      categoryId,
+      name,
+      slug,
+      description,
+      isDigital,
+      isActive,
+      price,
+      stockQuantity,
+    } = req.body;
+
+    const product = await prisma.product.create({
+      data: {
+        categoryId,
+        name,
+        slug,
+        description,
+        isDigital,
+        isActive,
+        price,
+        stock: {
+          create: {
+            quantity: stockQuantity || 0,
+            lastCheckedAt: new Date(),
+          },
+        },
+      },
+      include: { stock: true },
+    });
+
+    res.json(product);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Many to Many Insert ... (user create order and order create order product)
+router.post("/user/order", async (req, res) => {
+  // #swagger.tags = ['Data Relational Operation Section']
+  try {
+    // Destructuring the request body to extract the necessary fields
+    const { username, email, password, products } = req.body;
+
+    // Step 1: Create a new user
+    const user = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password, // Be sure to hash the password before storing it in production
+      },
+    });
+
+    // Step 2: Create the order for the user
+    const order = await prisma.order.create({
+      data: {
+        userId: user.id,
+        orderProducts: {
+          create: products.map((product) => ({
+            productId: product.productId,
+            quantity: product.quantity,
+          })),
+        },
+      },
+      include: { orderProducts: true }, // Include the created order products in the response
+    });
+
+    // Step 3: Send back the response with user and order details
+    res.json({
+      user,
+      order,
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

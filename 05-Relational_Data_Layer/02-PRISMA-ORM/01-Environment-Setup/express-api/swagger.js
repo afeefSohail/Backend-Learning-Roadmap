@@ -10,14 +10,19 @@ const doc = {
   // Optional: Define the structural order and descriptions of your sections
   tags: [
     {
-      name: "Category Section",
+      name: "Data Relational Operation Section",
       description:
-        "Endpoints relating to e-commerce category trees and bulk deletions.",
+        "Endpoints relating to Data Relational Operations.",
     },
     {
-      name: "Product Section",
+      name: "Query Examples",
       description:
-        "Endpoints managing inventory products, pricing data, and stock counts.",
+        "Endpoints Examples of Diff Prisma Queries.",
+    },
+    {
+      name: "Filtering Examples",
+      description:
+        "Endpoints Examples of Diff Prisma Filtering.",
     },
   ],
 };

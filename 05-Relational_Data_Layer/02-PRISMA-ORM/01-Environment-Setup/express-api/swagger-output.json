@@ -9,12 +9,16 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Category Section",
-      "description": "Endpoints relating to e-commerce category trees and bulk deletions."
+      "name": "Data Relational Operation Section",
+      "description": "Endpoints relating to Data Relational Operations."
     },
     {
-      "name": "Product Section",
-      "description": "Endpoints managing inventory products, pricing data, and stock counts."
+      "name": "Query Examples",
+      "description": "Endpoints Examples of Diff Prisma Queries."
+    },
+    {
+      "name": "Filtering Examples",
+      "description": "Endpoints Examples of Diff Prisma Filtering."
     }
   ],
   "schemes": [
@@ -24,7 +28,7 @@
     "/category/insert": {
       "post": {
         "tags": [
-          "Category Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -66,7 +70,7 @@
     "/category/bulk-insert": {
       "post": {
         "tags": [
-          "Category Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -99,7 +103,7 @@
     "/category/update/{id}": {
       "post": {
         "tags": [
-          "Category Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -150,7 +154,7 @@
     "/category/upsert": {
       "post": {
         "tags": [
-          "Category Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -192,7 +196,7 @@
     "/category/update-many": {
       "post": {
         "tags": [
-          "Category Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -234,7 +238,7 @@
     "/category": {
       "post": {
         "tags": [
-          "Category Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -279,7 +283,7 @@
     "/category/bulk-delete": {
       "delete": {
         "tags": [
-          "Category Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -315,7 +319,7 @@
     "/category/{id}": {
       "delete": {
         "tags": [
-          "Category Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -342,7 +346,7 @@
     "/product/stock": {
       "post": {
         "tags": [
-          "Product Section"
+          "Data Relational Operation Section"
         ],
         "description": "",
         "parameters": [
@@ -390,8 +394,251 @@
         }
       }
     },
+    "/user/order": {
+      "post": {
+        "tags": [
+          "Data Relational Operation Section"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "products": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/products/and": {
+      "get": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/or": {
+      "get": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/not": {
+      "get": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/complex": {
+      "get": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/filters/rb": {
+      "post": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "example": "any"
+                },
+                "priceMin": {
+                  "example": "any"
+                },
+                "priceMax": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/search/pattern": {
+      "get": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/products/filter/categories": {
+      "get": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/between": {
+      "get": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/slicing": {
+      "get": {
+        "tags": [
+          "Filtering Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/products": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -405,6 +652,9 @@
     },
     "/api/products/detail": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -418,6 +668,9 @@
     },
     "/api/products/active": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -431,6 +684,9 @@
     },
     "/api/products/filter/qp/": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "parameters": [
           {
@@ -456,6 +712,9 @@
     },
     "/api/products/filter/pp/{isActive}/{categoryId}": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "parameters": [
           {
@@ -483,6 +742,9 @@
     },
     "/api/products/filter/rb": {
       "post": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "parameters": [
           {
@@ -519,6 +781,9 @@
     },
     "/api/products/active/orderby": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -532,6 +797,9 @@
     },
     "/api/products/price": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -545,6 +813,9 @@
     },
     "/api/products/pagination": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "parameters": [
           {
@@ -570,6 +841,9 @@
     },
     "/api/categories/linked-to-products": {
       "get": {
+        "tags": [
+          "Query Examples"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -577,45 +851,6 @@
           },
           "500": {
             "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/user/order": {
-      "post": {
-        "tags": [
-          "Product Section"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "username": {
-                  "example": "any"
-                },
-                "email": {
-                  "example": "any"
-                },
-                "password": {
-                  "example": "any"
-                },
-                "products": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
       }

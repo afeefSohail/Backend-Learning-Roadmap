@@ -7,7 +7,7 @@ const router = express.Router();
 // npm install @prisma/adapter-pg pg
 const { Pool } = require("pg");
 const { PrismaPg } = require("@prisma/adapter-pg");
-const { PrismaClient , Prisma } = require("@prisma/client");
+const { PrismaClient, Prisma } = require("@prisma/client");
 const { splitWhere } = require("effect/Chunk");
 
 // Create a native PostgreSQL connection pool targeting the internal Docker network address
@@ -30,6 +30,7 @@ const productSelectTemplate = {
 
 // Endpoint to retrieve all products using findMany()
 router.get("/api/products", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     const products = await prisma.product.findMany({});
 
@@ -44,6 +45,7 @@ router.get("/api/products", async (req, res) => {
 
 // Endpoint to retrieve all products using findMany()
 router.get("/api/products/detail", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     const productSelectForList = {
       ...productSelectTemplate,
@@ -73,6 +75,7 @@ router.get("/api/products/detail", async (req, res) => {
 
 // Endpoint to retrieve active products
 router.get("/api/products/active", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     // Retrieve active products from the database
     const activeProducts = await prisma.product.findMany({
@@ -95,6 +98,7 @@ router.get("/api/products/active", async (req, res) => {
 
 // Endpoint to retrieve products with dynamic query parameters
 router.get("/api/products/filter/qp/", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     // Get dynamic query parameters from the request
     const { isActive, categoryId } = req.query;
@@ -119,6 +123,7 @@ router.get("/api/products/filter/qp/", async (req, res) => {
 router.get(
   "/api/products/filter/pp/:isActive/:categoryId",
   async (req, res) => {
+    // #swagger.tags = ['Query Examples']
     try {
       // Get dynamic path parameters from the request
       const { isActive, categoryId } = req.params;
@@ -152,6 +157,7 @@ router.get(
 
 // Endpoint to retrieve products with dynamic filters using request body
 router.post("/api/products/filter/rb", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     // Get dynamic filters from the request body
     const { isActive, categoryId, priceMin, priceMax } = req.body;
@@ -198,6 +204,7 @@ router.post("/api/products/filter/rb", async (req, res) => {
 
 // Endpoint with Order by
 router.get("/api/products/active/orderby", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     // Retrieve active products from the database
     const activeProducts = await prisma.product.findMany({
@@ -224,6 +231,7 @@ router.get("/api/products/active/orderby", async (req, res) => {
 
 // Endpoint most expensive product
 router.get("/api/products/price", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     const products = await prisma.product.findFirst({
       where: {
@@ -245,6 +253,7 @@ router.get("/api/products/price", async (req, res) => {
 
 // Endpoint to retrieve products with pagination
 router.get("/api/products/pagination", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     const { page = 1, pageSize = 10 } = req.query; // Default to page 1, and 10 items per page
 
@@ -288,10 +297,11 @@ router.get("/api/products/pagination", async (req, res) => {
 
 // Endpoint to retrieve distinct categories connected to products
 router.get("/api/categories/linked-to-products", async (req, res) => {
+  // #swagger.tags = ['Query Examples']
   try {
     // Retrieve distinct categoryIds from the products table
     const distinctCategoryIds = await prisma.product.findMany({
-      distinct: ["categoryId"], // same category Ids cant repeat 
+      distinct: ["categoryId"], // same category Ids cant repeat
       select: {
         categoryId: true, // Only select categoryId field
       },
