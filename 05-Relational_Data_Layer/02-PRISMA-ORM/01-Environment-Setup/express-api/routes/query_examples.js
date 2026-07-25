@@ -8,7 +8,6 @@ const router = express.Router();
 const { Pool } = require("pg");
 const { PrismaPg } = require("@prisma/adapter-pg");
 const { PrismaClient, Prisma } = require("@prisma/client");
-const { splitWhere } = require("effect/Chunk");
 
 // Create a native PostgreSQL connection pool targeting the internal Docker network address
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });

@@ -24,6 +24,11 @@ const doc = {
       description:
         "Endpoints Examples of Diff Prisma Filtering.",
     },
+    {
+      name: "Join Queries",
+      description:
+        "Endpoints Examples of Diff Prisma Filtering.",
+    }
   ],
 };
 

@@ -19,6 +19,10 @@
     {
       "name": "Filtering Examples",
       "description": "Endpoints Examples of Diff Prisma Filtering."
+    },
+    {
+      "name": "Join Queries",
+      "description": "Endpoints Examples of Diff Prisma Filtering."
     }
   ],
   "schemes": [
@@ -600,12 +604,15 @@
         "description": "",
         "parameters": [
           {
-            "name": "isActive",
+            "name": "categoryIds",
             "in": "query",
             "type": "string"
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -620,12 +627,23 @@
         "description": "",
         "parameters": [
           {
-            "name": "isActive",
+            "name": "priceMin",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "priceMax",
             "in": "query",
             "type": "string"
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
           "500": {
             "description": "Internal Server Error"
           }
@@ -638,14 +656,178 @@
           "Filtering Examples"
         ],
         "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/product/category/join": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/users/join": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/users/join/aliases": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/users/sql": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
         "parameters": [
           {
-            "name": "isActive",
+            "name": "categoryId",
             "in": "query",
             "type": "string"
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/product/{id}": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/product/promotions/new": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/orders": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/product/promotions/left/join": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/product/promotions/full/join": {
+      "get": {
+        "tags": [
+          "Join Queries"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
           "500": {
             "description": "Internal Server Error"
           }

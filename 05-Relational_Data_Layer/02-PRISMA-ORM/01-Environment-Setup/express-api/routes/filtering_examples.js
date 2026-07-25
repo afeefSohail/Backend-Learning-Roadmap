@@ -8,10 +8,7 @@ const router = express.Router();
 const { Pool } = require("pg");
 const { PrismaPg } = require("@prisma/adapter-pg");
 const { PrismaClient, Prisma } = require("@prisma/client");
-const { splitWhere, contains } = require("effect/Chunk");
-const { await } = require("effect/Deferred");
-const { And, Or } = require("effect/ConfigError");
-const { startsWith, endsWith } = require("valibot");
+
 
 // Create a native PostgreSQL connection pool targeting the internal Docker network address
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -184,12 +181,10 @@ router.get("/api/products/search/pattern", async (req, res) => {
         filter = { endsWith: searchTerm };
         break;
       default:
-        return res
-          .status(400)
-          .json({
-            error:
-              "Invalid search type. Use 'conatains', 'startsWith', or 'endsWith' ",
-          });
+        return res.status(400).json({
+          error:
+            "Invalid search type. Use 'conatains', 'startsWith', or 'endsWith' ",
+        });
 
         break;
     }
@@ -208,7 +203,10 @@ router.get("/api/products/search/pattern", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ error: "Something went wrong while retrieving the product.", detail: error.message });
+      .json({
+        error: "Something went wrong while retrieving the product.",
+        detail: error.message,
+      });
   }
 });
 
@@ -217,25 +215,64 @@ router.get("/api/products/filter/categories", async (req, res) => {
   // #swagger.tags = ['Filtering Examples']
 
   try {
-    const { isActive } = req.query;
-    const products = await prisma.product.findMany({});
+    // Get category ID's from the query parameters (e.g., ?categoryIds=1,2,3)
+    const { categoryIds } = req.query;
+
+    // Convert the catgoryIds to an array of integers
+    const categoryArray = categoryIds.split(",").map((id) => parseInt(id, 10));
+
+    // Retrieve products where the categoryId is in the list of provided category IDs
+    const products = await prisma.product.findMany({
+      where: {
+        categoryId: { in: categoryArray },
+      },
+    });
+
+    res.json(products); // Return the filtered products
   } catch (error) {
     res
       .status(500)
-      .json({ error: "Something went wrong", detail: error.message });
+      .json({
+        error: "Something went wrong while retrieving products",
+        detail: error.message,
+      });
   }
 });
 
 // Endpoint to retrieve products filtered by a list of category IDs
 router.get("/api/products/between", async (req, res) => {
   // #swagger.tags = ['Filtering Examples']
+  const { priceMin, priceMax } = req.query;
+
+  if (priceMin === undefined || priceMax === undefined) {
+    res
+      .status(400)
+      .json({
+        error: "Min or Max Undefined.",
+      });
+  }
+
+  const min = parseInt(priceMin);
+  const max = parseInt(priceMax);
+
   try {
-    const { isActive } = req.query;
-    const products = await prisma.product.findMany({});
+    const products = await prisma.product.findMany({
+      where: {
+        price: {
+          gte: min, // Gtreater then or equal to 100
+          lte: max, // less then or equal to 500
+        },
+      },
+    });
+
+    res.json(products); // Return filtered products
   } catch (error) {
     res
       .status(500)
-      .json({ error: "Something went wrong", detail: error.message });
+      .json({
+        error: "Something went wrong while retrieving products",
+        detail: error.message,
+      });
   }
 });
 
@@ -243,12 +280,21 @@ router.get("/api/products/between", async (req, res) => {
 router.get("/api/products/slicing", async (req, res) => {
   // #swagger.tags = ['Filtering Examples']
   try {
-    const { isActive } = req.query;
-    const products = await prisma.product.findMany({});
+
+    // He will SKIP the First one and then pick next 5 products
+    const products = await prisma.product.findMany({
+      take: 5,
+      skip: 1,
+    });
+
+    res.json(products); // Return filtered products
   } catch (error) {
     res
       .status(500)
-      .json({ error: "Something went wrong", detail: error.message });
+      .json({
+        error: "Something went wrong while retrieving products",
+        detail: error.message,
+      });
   }
 });
 
