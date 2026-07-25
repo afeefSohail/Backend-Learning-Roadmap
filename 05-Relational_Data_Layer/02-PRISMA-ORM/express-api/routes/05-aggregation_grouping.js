@@ -273,4 +273,57 @@ router.get("/average-price-per-category", async (req, res) => {
   }
 });
 
+
+// 🟢 GET: Category Pricing Analytics with Combined Category Names
+router.get('/analytics/categories-detailed', async (req, res) => {
+  // #swagger.tags = ['Aggregation Grouping Section']
+    try {
+        // 1. Run the high-performance database aggregation query
+        const stats = await prisma.product.groupBy({
+            by: ['categoryId'],
+            where: { isActive: true },
+            _count: { id: true },
+            _avg: { price: true },
+            _sum: { price: true },
+            _min: { price: true }, // 💡 Dynamic boundary min price check
+            _max: { price: true }, // 💡 Dynamic boundary max price check
+            having: {
+                price: {
+                    _avg: { gt: 50.00 }
+                }
+            }
+        });
+
+        if (stats.length === 0) {
+            return res.status(200).json({ success: true, data: [] });
+        }
+
+        // 2. Fetch the structural Category profiles matching our aggregated IDs
+        const activeIds = stats.map(s => s.categoryId);
+        const categories = await prisma.category.findMany({
+            where: { id: { in: activeIds } }
+        });
+
+        // 3. Map the names onto our mathematical output array data
+        const detailedStats = stats.map(stat => {
+            const match = categories.find(c => c.id === stat.categoryId);
+            return {
+                categoryId: stat.categoryId,
+                categoryName: match ? match.name : "Unknown Category",
+                categorySlug: match ? match.slug : "",
+                totalProducts: stat._count.id,
+                averagePrice: stat._avg.price,
+                totalValue: stat._sum.price,
+                cheapestProductPrice: stat._min.price, // 💡 Extracted min price insight
+                mostExpensiveProductPrice: stat._max.price // 💡 Extracted max price insight
+            };
+        });
+
+        res.status(200).json({ success: true, data: detailedStats });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to compile reporting data", details: error.message });
+    }
+});
+
+
 module.exports = router;
