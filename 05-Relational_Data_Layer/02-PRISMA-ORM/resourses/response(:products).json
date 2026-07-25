@@ -1,0 +1,18 @@
+{
+  "id": 4,
+  "categoryId": 36,
+  "name": "iPhone-17 Pro",
+  "slug": "iPhone-17",
+  "description": "Next-generation Apple smartphone with an advanced camera matrix and updated chip.",
+  "price": "1199.99",
+  "isDigital": false,
+  "isActive": true,
+  "createdAt": "2026-07-15T11:47:38.898Z",
+  "updatedAt": "2026-07-15T11:47:38.898Z",
+  "stock": {
+    "id": 1,
+    "productId": 4,
+    "quantity": 85,
+    "lastCheckedAt": "2026-07-15T11:47:38.143Z"
+  }
+}

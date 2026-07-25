@@ -1,0 +1,46 @@
+{
+  "id": 42,
+  "parentId": 1,
+  "name": "Musical Instruments",
+  "slug": "musical-instruments",
+  "level": 2,
+  "isActive": true,
+  "products": [
+    {
+      "id": 1,
+      "categoryId": 42,
+      "name": "Acoustic-Electric Guitar",
+      "slug": "acoustic-electric-guitar-6str",
+      "description": "Solid spruce top guitar with built-in tuner and active preamp system.",
+      "price": "450",
+      "isDigital": false,
+      "isActive": true,
+      "createdAt": "2026-07-15T11:24:33.998Z",
+      "updatedAt": "2026-07-15T11:24:33.998Z"
+    },
+    {
+      "id": 2,
+      "categoryId": 42,
+      "name": "Professional 88-Key Digital Piano",
+      "slug": "88key-digital-piano-weighted",
+      "description": "Fully weighted hammer-action keys with premium concert grand piano samples.",
+      "price": "899.99",
+      "isDigital": false,
+      "isActive": true,
+      "createdAt": "2026-07-15T11:24:33.998Z",
+      "updatedAt": "2026-07-15T11:24:33.998Z"
+    },
+    {
+      "id": 3,
+      "categoryId": 42,
+      "name": "Electronic Drum Kit Studio Edition",
+      "slug": "electronic-drum-kit-studio",
+      "description": "Mesh drum heads with quiet response, dual-zone cymbals, and a module with 30 drum kits.",
+      "price": "599.5",
+      "isDigital": false,
+      "isActive": true,
+      "createdAt": "2026-07-15T11:24:33.998Z",
+      "updatedAt": "2026-07-15T11:24:33.998Z"
+    }
+  ]
+}
