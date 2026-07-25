@@ -23,6 +23,10 @@
     {
       "name": "Join Queries",
       "description": "Endpoints Examples of Diff Prisma Filtering."
+    },
+    {
+      "name": "Aggregation Grouping Section",
+      "description": "Apply SQL Aggregation Functions"
     }
   ],
   "schemes": [
@@ -437,6 +441,227 @@
         }
       }
     },
+    "/api/products": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/detail": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/active": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/filter/qp/": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/filter/pp/{isActive}/{categoryId}": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/filter/rb": {
+      "post": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "isActive": {
+                  "example": "any"
+                },
+                "categoryId": {
+                  "example": "any"
+                },
+                "priceMin": {
+                  "example": "any"
+                },
+                "priceMax": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/active/orderby": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/price": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/products/pagination": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/categories/linked-to-products": {
+      "get": {
+        "tags": [
+          "Query Examples"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/products/and": {
       "get": {
         "tags": [
@@ -834,10 +1059,10 @@
         }
       }
     },
-    "/api/products": {
+    "/count-active-products": {
       "get": {
         "tags": [
-          "Query Examples"
+          "Aggregation Grouping Section"
         ],
         "description": "",
         "responses": {
@@ -850,79 +1075,13 @@
         }
       }
     },
-    "/api/products/detail": {
+    "/count-products-by-category/{categoryId}": {
       "get": {
         "tags": [
-          "Query Examples"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/products/active": {
-      "get": {
-        "tags": [
-          "Query Examples"
-        ],
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/products/filter/qp/": {
-      "get": {
-        "tags": [
-          "Query Examples"
+          "Aggregation Grouping Section"
         ],
         "description": "",
         "parameters": [
-          {
-            "name": "isActive",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "categoryId",
-            "in": "query",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/products/filter/pp/{isActive}/{categoryId}": {
-      "get": {
-        "tags": [
-          "Query Examples"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "isActive",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "categoryId",
             "in": "path",
@@ -940,49 +1099,10 @@
         }
       }
     },
-    "/api/products/filter/rb": {
-      "post": {
-        "tags": [
-          "Query Examples"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "isActive": {
-                  "example": "any"
-                },
-                "categoryId": {
-                  "example": "any"
-                },
-                "priceMin": {
-                  "example": "any"
-                },
-                "priceMax": {
-                  "example": "any"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/api/products/active/orderby": {
+    "/count-users-with-orders": {
       "get": {
         "tags": [
-          "Query Examples"
+          "Aggregation Grouping Section"
         ],
         "description": "",
         "responses": {
@@ -995,10 +1115,10 @@
         }
       }
     },
-    "/api/products/price": {
+    "/count-active-products-ordered-at-least-2-times": {
       "get": {
         "tags": [
-          "Query Examples"
+          "Aggregation Grouping Section"
         ],
         "description": "",
         "responses": {
@@ -1011,24 +1131,12 @@
         }
       }
     },
-    "/api/products/pagination": {
+    "/sum-total-value-of-products": {
       "get": {
         "tags": [
-          "Query Examples"
+          "Aggregation Grouping Section"
         ],
         "description": "",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1039,10 +1147,90 @@
         }
       }
     },
-    "/api/categories/linked-to-products": {
+    "/sum-total-value-of-products-in-stock": {
       "get": {
         "tags": [
-          "Query Examples"
+          "Aggregation Grouping Section"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/average-product-price": {
+      "get": {
+        "tags": [
+          "Aggregation Grouping Section"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/average-order-quantity": {
+      "get": {
+        "tags": [
+          "Aggregation Grouping Section"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/average-stock-quantity-active-products": {
+      "get": {
+        "tags": [
+          "Aggregation Grouping Section"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/count-products-per-category": {
+      "get": {
+        "tags": [
+          "Aggregation Grouping Section"
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/average-price-per-category": {
+      "get": {
+        "tags": [
+          "Aggregation Grouping Section"
         ],
         "description": "",
         "responses": {

@@ -1,3 +1,5 @@
+const { description } = require("valibot");
+
 const swaggerAutogen = require("swagger-autogen")();
 
 const doc = {
@@ -28,6 +30,10 @@ const doc = {
       name: "Join Queries",
       description:
         "Endpoints Examples of Diff Prisma Filtering.",
+    },
+    {
+      name: "Aggregation Grouping Section",
+      description: "Apply SQL Aggregation Functions"
     }
   ],
 };
