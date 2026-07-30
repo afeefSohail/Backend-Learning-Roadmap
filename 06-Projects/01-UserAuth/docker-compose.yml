@@ -1,0 +1,47 @@
+name: User Auth Project
+
+services:
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: afeefsohail 
+      POSTGRES_PASSWORD: afeefsohail1122
+      POSTGRES_DB: userauthdb
+    ports:
+      - "5433:5432" # Expose PostgresSQL on port 5433:5432
+
+  user-auth:
+    build:
+      context: .                  
+    container_name: user_auth_api 
+    ports:
+      - "3000:3000" # Expose Express on port 3000
+      - "5556:5555" # Expose Prisma Studio on port 5555
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://afeefsohail:afeefsohail1122@postgres:5432/userauthdb?schema=public"
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN}
+      NODE_ENV: ${NODE_ENV}
+    volumes:
+      - .:/app # ← bind mount: host folder ↔ container folder
+      - node_modules:/app/node_modules # ← references the named volume declared below
+    command:
+      - sh
+      - -c
+      - |
+      
+        npx prisma generate
+
+        npx prisma studio -b none --port 5555 &
+
+        npm run dev
+        
+volumes: # ← top-level: declares node_modules as a real Docker-managed volume
+  node_modules:

@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  photos       Photo[]
+  createdAt    DateTime @default(now())
+
+  @@map("user")
+}
+
+model Photo {
+  id        Int         @id @default(autoincrement())
+  url       String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime?   @updatedAt
+
+  @@map("photo")
+}
