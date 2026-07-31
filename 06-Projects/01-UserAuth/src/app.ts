@@ -16,7 +16,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRouter);
-app.use("/user", userRouter);
-app.use("/user", photoRouter);
+app.use("/user", [ userRouter , photoRouter ] );
 
 export default app;
