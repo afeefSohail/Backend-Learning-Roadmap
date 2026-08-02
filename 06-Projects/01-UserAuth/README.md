@@ -189,7 +189,16 @@ Dockerfile `RUN npm install` layers only affect the *image* — once the bind mo
 - ESM vs CommonJS tradeoffs, encountered through real friction rather than abstract explanation
 - The Docker bind-mount + named-volume host/container split, and why it causes "works in container, broken in editor" bugs
 - Atomic ownership-scoped mutations (`where: { id, AND: { userId } }`) over separate check-then-act queries
+- **ESM (`"type": "module"`) means no `__dirname`/`__filename`.** `process.cwd()` still works (process-level, not module-system-dependent) and was used to resolve static upload folder scopes cleanly. For explicit file system paths, a centralized helper utility uses `fileURLToPath(import.meta.url)` to securely re-create the `__dirname` context in a modern, standard-compliant manner.
+- **NodeNext Extension Rigidity.** Every relative import statement across your controller grid and routing layers must include an explicit `.js` suffix token (e.g., `import app from "./app.js"`), forcing compilation targets to align flawlessly between local compilation checks and the final production environment inside Docker.
+---
 
+## 📈 Local Operational Monitoring Dashboard
+
+- **Express API Gateway Engine:** `http://localhost:3000`
+- **Interactive Unified Swagger Docs:** `http://localhost:3000/docs`
+- **Prisma Studio Visual Dashboard Grid:** `http://localhost:5556`
+- **Container Database Port (DBeaver Connection):** `localhost:5433`
 ---
 
 ## License
