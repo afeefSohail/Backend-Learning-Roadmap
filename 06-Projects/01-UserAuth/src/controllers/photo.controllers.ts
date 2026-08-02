@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { AuthedRequest } from "#middlewares/auth.middleware";
 import { withFullPhotoUrl } from "#utils/url.util";
 
