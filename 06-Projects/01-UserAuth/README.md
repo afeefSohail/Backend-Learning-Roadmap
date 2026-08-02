@@ -46,10 +46,9 @@ A TypeScript + Express + Prisma + PostgreSQL backend implementing email/password
     │   └── photo.controllers.ts
     ├── middleware/
     │   ├── auth.middleware.ts       # requireAuth — verifies access token
-    │   ├── upload.middleware.ts     # Multer config
-    │   └── validate.middleware.ts   # Zod validation middleware
+    │   ├── upload.middleware.ts     # Multer config 
     ├── validators/
-    │   └── auth.validator.ts
+    │   └── auth.validator.ts        # Zod validation middleware
     └── utils/
         ├── jwt.util.ts              # centralized sign/verify logic
         ├── url.util.ts              # withFullPhotoUrl helper
