@@ -47,16 +47,15 @@ const uploadPhotos = async (req: AuthedRequest, res: Response) => {
 
 const getAllPhotos = async (req: AuthedRequest, res: Response) => {
   try {
-
     // const photos = await prisma.user.findUnique({
     //   where: { id: req.userId },
-    //   select: { 
+    //   select: {
     //     photos: {
     //       orderBy: { createdAt: "desc" },
     //     },
     //   },
     // });
-    
+
     // const photosWithFullUrl = photos?.photos.map(withFullPhotoUrl);
 
     // This version is better
@@ -64,7 +63,7 @@ const getAllPhotos = async (req: AuthedRequest, res: Response) => {
       where: { userId: req.userId },
       orderBy: { createdAt: "desc" },
     });
-    
+
     const photosWithFullUrl = photos.map(withFullPhotoUrl);
     res.status(200).json({ success: true, data: { photosWithFullUrl } });
   } catch (error) {
@@ -116,14 +115,12 @@ const deletePhoto = async (
       },
     });
 
-    (await fs
-      .unlink(
-        path.join(process.cwd(), "uploads", path.basename(deletedPhoto.url)),
-      )
-      .catch(() => {}),
-      res
-        .status(200)
-        .json({ success: true, message: "Photo deleted successfully" }));
+    await fs.unlink(path.join(process.cwd(), "uploads", path.basename(deletedPhoto.url))).catch(() => {});
+    
+    res
+      .status(200)
+      .json({ success: true, message: "Photo deleted successfully" })
+
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
