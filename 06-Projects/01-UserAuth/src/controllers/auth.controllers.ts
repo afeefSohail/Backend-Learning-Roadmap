@@ -1,11 +1,22 @@
-import { Request , Response } from "express";
+import { Request, Response } from "express";
+import { AuthedRequest } from "#middlewares/auth.middleware";
+import bcrypt from "bcryptjs";
+import {
+  signAccessToken,
+  signRefreshToken,
+  verifyRefreshToken,
+  REFRESH_TOKEN_TTL_MS,
+} from "#utils/jwt.utls";
+
+import { SignUpInput, LoginInput } from "#validators/auth.validators";
+
 // In Prisma v7, new PrismaClient() without arguments throws exactly this error because the
 // internal connection engine has been removed — you must pass an adapter, with no fallback.
 // The prisma-client generator now connects through a driver adapter, so for PostgreSQL you
 // need to install @prisma/adapter-pg and pass it to the constructor as new PrismaClient({ adapter })
 // npm install @prisma/adapter-pg pg
 import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg" ;
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, Prisma } from "@prisma/client";
 
 // Create a native PostgreSQL connection pool targeting the internal Docker network address
@@ -18,25 +29,147 @@ const prisma = new PrismaClient({
   log: ["query", "info", "warn", "error"], // Enables query logging
 });
 
-const accountCreated = (req: Request, res: Response) => {
-    res.json({ success: true, message: "Account Created" });
-}
+//                         Request<Params, ResBody, ReqBody, ReqQuery>
+const signUp = async (req: Request<{}, {}, SignUpInput>, res: Response) => {
+  try {
+    const { email, password, name } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        email,
+        passwordHash: hashedPassword,
+        name,
+      },
+    });
 
-const login = (req: Request, res: Response) => {
-    res.json({ success: true, message: "Verify credentials, issue JWT" });
-}
+    const { passwordHash: _, ...safeUser } = user;
+    res.status(200).json({ success: true, data: safeUser });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return res.status(409).json({ message: "Email already in use." });
+    }
 
-const logout = (req: Request, res: Response) => {
-  res.json({ success: true, message: "Clear session/token (client-side mostly, or blacklist later)" });
-}
+    res.status(500).json({ message: "Error creating new user." });
+  }
+};
 
-const getMe = (req: Request, res: Response) => {
-    res.json({ success: true, message: `Return currently authenticated user (quick "am I logged in" check)` });
-}
+const login = async (req: Request<{}, {}, LoginInput>, res: Response) => {
+  try {
+    const { email, password } = req.body;
 
-export {
-    accountCreated,
-    login,
-    logout,
-    getMe
-}
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    const accessToken = signAccessToken({ userId: user.id }); // valid 15 min, used on every request
+    const refreshToken = signRefreshToken({ userId: user.id }); // valid 7 days, used only to get new access tokens
+
+    // Question: When JWT verify by refersh token byself then why we need to save refresh token in db ?
+    // Answer: revocability. jwt.verify() can only tell you "this token was legitimately signed by us and hasn't expired yet."
+    // It cannot tell you "...but we've decided to cancel it early." JWTs are stateless by design
+    // — once signed, the server has no built-in way to say "actually, ignore this one" before its natural expiry,
+    // unless it keeps a record somewhere to check against.
+
+    await prisma.refreshToken.create({
+      data: {
+        token: refreshToken,
+        userId: user.id,
+        expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_MS),
+      },
+    });
+
+    const { passwordHash: _, ...safeUser } = user;
+    res.status(200).json({
+      success: true,
+      data: { user: safeUser, accessToken, refreshToken },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging in.", meta: error });
+  }
+};
+
+const refresh = async (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({ message: "Refresh token is required" });
+    }
+
+    const stored = await prisma.refreshToken.findUnique({
+      where: { token: refreshToken },
+    });
+
+    if (!stored || stored.expiresAt < new Date()) {
+      // Clean up expired row if it still exists
+      if (stored) {
+        await prisma.refreshToken.delete({
+          where: { id: stored.id },
+        });
+      }
+
+      return res
+        .status(401)
+        .json({ message: "Invalid or expired refresh token" });
+    }
+
+    // Verifies signature + throws if tampered/expired at the JWT level too
+    const payload = verifyRefreshToken(refreshToken);
+    const newAccessToken = signAccessToken({ userId: payload.userId });
+
+    res.status(200).json({ success: true, accessToken: newAccessToken });
+  } catch (error) {
+    res.status(401).json({ message: "Invalid or expired refresh token" });
+  }
+};
+
+const logout = async (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({ message: "Refresh token is required" });
+    }
+
+    await prisma.refreshToken.deleteMany({ where: { token: refreshToken } });
+    // deleteMany (not delete) so a retry/duplicate logout call doesn't throw
+    // if the token was already removed
+
+    res.status(200).json({ success: true, message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging out.", meta: error });
+  }
+};
+
+const getMe = async (req: AuthedRequest, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {id : req.userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { passwordHash: _, ...safeUser } = user;
+    res.status(200).json({ success: true, data: {user: safeUser} });
+
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user.", meta: error });
+  }
+};
+
+export { signUp, login, refresh, logout, getMe };

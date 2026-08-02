@@ -14,6 +14,8 @@ model User {
   photos       Photo[]
   createdAt    DateTime @default(now())
 
+  refreshTokens RefreshToken[]
+  
   @@map("user")
 }
 
@@ -26,4 +28,15 @@ model Photo {
   updatedAt DateTime?   @updatedAt
 
   @@map("photo")
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@map("refresh_token")
 }

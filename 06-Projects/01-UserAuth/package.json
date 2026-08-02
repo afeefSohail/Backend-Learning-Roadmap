@@ -9,7 +9,10 @@
   },
   "imports": {
     "#routes/*": "./src/routes/*.js",
-    "#controllers/*": "./src/controllers/*.js"
+    "#controllers/*": "./src/controllers/*.js",
+    "#middlewares/*": "./src/middlewares/*.js",
+    "#validators/*": "./src/validators/*.js",
+    "#utils/*": "./src/utils/*.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.1",

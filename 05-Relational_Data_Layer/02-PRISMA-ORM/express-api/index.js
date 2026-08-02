@@ -15,6 +15,6 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 // app.use("/", dataRouters);
 // app.use("/", queryRouter);
 // app.use("/", filteringRouter);
-//app.use("/", joinQueriesRouter);
+// app.use("/", joinQueriesRouter);
 app.use("/", aggregateGrouping);
 app.listen(3000, () => console.log("Server running on port 3000"));

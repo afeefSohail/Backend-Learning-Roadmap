@@ -14,8 +14,12 @@
   // 🟢 Maps the type tracking directly to your active TypeScript source folders!
   "paths": {
     "#routes/*": ["./src/routes/*"],
-    "#controllers/*": ["./src/controllers/*"]
+    "#controllers/*": ["./src/controllers/*"],
+    "#middlewares/*": ["./src/middlewares/*"],
+    "#validators/*": ["./src/validators/*"],
+    "#utils/*": ["./src/utils/*"]
   },
+  
   "include": [
     "main.ts",                     // 🟢 Include root file 1 explicitly
     "app.ts",                      // 🟢 Include root file 2 explicitly
