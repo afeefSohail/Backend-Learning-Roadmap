@@ -9,7 +9,7 @@ import { withFullPhotoUrl } from "#utils/url.util";
 // The prisma-client generator now connects through a driver adapter, so for PostgreSQL you
 // need to install @prisma/adapter-pg and pass it to the constructor as new PrismaClient({ adapter })
 // npm install @prisma/adapter-pg pg
-import { Pool } from "pg";
+import { Pool } from "../../node_modules/@types/pg/index.js";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, Prisma } from "@prisma/client";
 
