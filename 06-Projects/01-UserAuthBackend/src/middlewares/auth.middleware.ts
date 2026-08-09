@@ -1,24 +1,25 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyAccessToken } from "#utils/jwt.utls";
+import { verifyAccessToken } from "#utils/jwt.util";
+import { sendResponse } from "#utils/response.util";
 import { ZodType } from "zod";
 
-export const validate =
-  (schema: ZodType) => (req: Request, res: Response, next: NextFunction) => {
-    const result = schema.safeParse({ body: req.body });
+export const validate = (schema: ZodType) => (req: Request, res: Response, next: NextFunction) => {
+  const result = schema.safeParse({ body: req.body });
 
-    if (!result.success) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        errors: result.error.issues.map((issue) => ({
-          field: issue.path.join("."),
-          message: issue.message,
-        })),
-      });
-    }
+  if (!result.success) {
+    return sendResponse({
+      res,
+      code: 400,
+      message: "Validation failed",
+      data: result.error.issues.map((issue) => ({
+        field: issue.path.join("."),
+        message: issue.message,
+      })),
+    });
+  }
 
-    next();
-  };
+  next();
+};
 
 export interface AuthedRequest<P = {}> extends Request<P> {
   userId?: number;

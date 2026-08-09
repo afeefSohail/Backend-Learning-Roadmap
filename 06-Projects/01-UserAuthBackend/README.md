@@ -50,9 +50,10 @@ A TypeScript + Express + Prisma + PostgreSQL backend implementing email/password
     ├── validators/
     │   └── auth.validator.ts        # Zod validation middleware
     └── utils/
+        ├── response.util.ts         # centralized response logic
         ├── jwt.util.ts              # centralized sign/verify logic
         ├── url.util.ts              # withFullPhotoUrl helper
-        └── path.ts                  # getPaths(import.meta.url) — ESM __dirname equivalent
+        └── path.util.ts             # getPaths(import.meta.url) — ESM __dirname equivalent
 ```
 
 ---

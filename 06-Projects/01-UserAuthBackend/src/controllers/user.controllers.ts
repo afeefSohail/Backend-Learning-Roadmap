@@ -3,12 +3,13 @@ import path from "node:path";
 import { Request, Response } from "express";
 import { AuthedRequest } from "#middlewares/auth.middleware";
 import { withFullPhotoUrl } from "#utils/url.util";
+import { sendResponse } from "#utils/response.util";
 // In Prisma v7, new PrismaClient() without arguments throws exactly this error because the
 // internal connection engine has been removed — you must pass an adapter, with no fallback.
 // The prisma-client generator now connects through a driver adapter, so for PostgreSQL you
 // need to install @prisma/adapter-pg and pass it to the constructor as new PrismaClient({ adapter })
 // npm install @prisma/adapter-pg pg
-import { Pool } from "../../node_modules/@types/pg/index.js";
+import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, Prisma } from "@prisma/client";
 
@@ -28,7 +29,11 @@ const getUser = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const userId: number = parseInt(req.params.id, 10);
     if (isNaN(userId)) {
-      return res.status(400).json({ error: "Invalid User ID" });
+      return sendResponse({
+        res,
+        code: 400,
+        message: "Invalid User ID",
+      });
     }
 
     const user = await prisma.user.findUnique({
@@ -38,13 +43,18 @@ const getUser = async (req: Request<{ id: string }>, res: Response) => {
         name: true,
         email: true,
         photos: {
-          select: { url: true },
+          //select: { url: true },
+          include: {},
         },
       },
     });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return sendResponse({
+        res,
+        code: 404,
+        message: "User not found",
+      });
     }
 
     const userWithFullPhotoUrls = {
@@ -52,9 +62,19 @@ const getUser = async (req: Request<{ id: string }>, res: Response) => {
       photos: user.photos.map(withFullPhotoUrl),
     };
 
-    res.status(200).json({ success: true, data: { user: userWithFullPhotoUrls } });
+    sendResponse({
+      res,
+      code: 200,
+      message: "User found Successfully",
+      data: user,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user.", meta: error });
+    console.error(error);
+    sendResponse({
+      res,
+      code: 500,
+      message: "Error fetching user.",
+    });
   }
 };
 
@@ -70,24 +90,38 @@ const updateUser = async (req: AuthedRequest, res: Response) => {
         name: true,
         email: true,
         photos: {
-          select: { url: true },
+          //select: { url: true },
+          include: {},
         },
       },
     });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return sendResponse({
+        res,
+        code: 404,
+        message: "User not found",
+      });
     }
-
 
     const userWithFullPhotoUrls = {
       ...user,
       photos: user.photos.map(withFullPhotoUrl),
     };
 
-    res.status(200).json({ success: true, data: { user: userWithFullPhotoUrls } });
+    sendResponse({
+      res,
+      code: 200,
+      message: "User updated successfully.",
+      data: user,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error updating user.", meta: error });
+    console.error(error);
+    sendResponse({
+      res,
+      code: 500,
+      message: "Error updating user.",
+    });
   }
 };
 
@@ -115,22 +149,29 @@ const deleteUser = async (req: AuthedRequest, res: Response) => {
           }),
       ),
     );
-    
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "User Delete Successfully."
-      });
+
+    sendResponse({
+      res,
+      code: 200,
+      message: "User Delete Successfully.",
+    });
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
-      return res.status(404).json({ message: "User not found." });
+      return sendResponse({
+        res,
+        code: 404,
+        message: "User not found.",
+      });
     }
-
-    res.status(500).json({ message: "Error deleting user.", meta: error });
+    console.error(error);
+    sendResponse({
+      res,
+      code: 500,
+      message: "Error deleting user.",
+    });
   }
 };
 

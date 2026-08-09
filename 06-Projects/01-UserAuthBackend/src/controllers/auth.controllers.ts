@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { AuthedRequest } from "#middlewares/auth.middleware";
+import { sendResponse } from "#utils/response.util";
 import bcrypt from "bcryptjs";
 import {
   signAccessToken,
   signRefreshToken,
   verifyRefreshToken,
   REFRESH_TOKEN_TTL_MS,
-} from "#utils/jwt.utls";
+} from "#utils/jwt.util";
 
 import { SignUpInput, LoginInput } from "#validators/auth.validators";
 
@@ -15,7 +16,7 @@ import { SignUpInput, LoginInput } from "#validators/auth.validators";
 // The prisma-client generator now connects through a driver adapter, so for PostgreSQL you
 // need to install @prisma/adapter-pg and pass it to the constructor as new PrismaClient({ adapter })
 // npm install @prisma/adapter-pg pg
-import { Pool } from "../../node_modules/@types/pg/index.js";
+import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient, Prisma } from "@prisma/client";
 
@@ -43,16 +44,26 @@ const signUp = async (req: Request<{}, {}, SignUpInput>, res: Response) => {
     });
 
     const { passwordHash: _, ...safeUser } = user;
-    res.status(200).json({ success: true, data: safeUser });
+
+    sendResponse({
+      res,
+      code: 200,
+      message: "Account created successfully",
+      data: safeUser,
+    });
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      return res.status(409).json({ message: "Email already in use." });
+      return sendResponse({
+        res,
+        code: 409,
+        message: "Email already in use."
+      });
     }
-
-    res.status(500).json({ message: "Error creating new user." });
+    console.error(error);
+    sendResponse({ res, code: 500, message: "Something went wrong."});
   }
 };
 
@@ -65,13 +76,21 @@ const login = async (req: Request<{}, {}, LoginInput>, res: Response) => {
     });
 
     if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return sendResponse({
+        res,
+        code: 401,
+        message: "Invalid email or password"
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return sendResponse({
+        res,
+        code: 401,
+        message: "Invalid email or password"
+      });
     }
 
     const accessToken = signAccessToken({ userId: user.id }); // valid 15 min, used on every request
@@ -92,12 +111,20 @@ const login = async (req: Request<{}, {}, LoginInput>, res: Response) => {
     });
 
     const { passwordHash: _, ...safeUser } = user;
-    res.status(200).json({
-      success: true,
+
+    sendResponse({
+      res,
+      code: 200,
+      message: "Login successful",
       data: { user: safeUser, accessToken, refreshToken },
     });
   } catch (error) {
-    res.status(500).json({ message: "Error logging in.", meta: error });
+    console.error(error);
+    sendResponse({
+      res,
+      code: 500,
+      message: "Error logging in."
+    });
   }
 };
 
@@ -106,7 +133,11 @@ const refresh = async (req: Request, res: Response) => {
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      return res.status(400).json({ message: "Refresh token is required" });
+      return sendResponse({
+        res,
+        code: 400,
+        message: "Refresh token is required"
+      });
     }
 
     const stored = await prisma.refreshToken.findUnique({
@@ -121,18 +152,30 @@ const refresh = async (req: Request, res: Response) => {
         });
       }
 
-      return res
-        .status(401)
-        .json({ message: "Invalid or expired refresh token" });
+      return sendResponse({
+        res,
+        code: 401,
+        message: "Invalid or expired refresh token"
+      });
     }
 
     // Verifies signature + throws if tampered/expired at the JWT level too
     const payload = verifyRefreshToken(refreshToken);
     const newAccessToken = signAccessToken({ userId: payload.userId });
 
-    res.status(200).json({ success: true, accessToken: newAccessToken });
+    sendResponse({
+      res,
+      code: 200,
+      message: "Access token generated successfully!",
+      data: newAccessToken,
+    });
   } catch (error) {
-    res.status(401).json({ message: "Invalid or expired refresh token" });
+    console.error(error);
+    sendResponse({
+      res,
+      code: 401,
+      message: "Invalid or expired refresh token"
+    });
   }
 };
 
@@ -141,34 +184,59 @@ const logout = async (req: Request, res: Response) => {
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      return res.status(400).json({ message: "Refresh token is required" });
+      return sendResponse({
+        res,
+        code: 400,
+        message: "Refresh token is required"
+      });
     }
 
     await prisma.refreshToken.deleteMany({ where: { token: refreshToken } });
     // deleteMany (not delete) so a retry/duplicate logout call doesn't throw
     // if the token was already removed
-
-    res.status(200).json({ success: true, message: "Logged out successfully" });
+    sendResponse({
+      res,
+      code: 200,
+      message: "Logged out successfully!"
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error logging out.", meta: error });
+    console.error(error);
+    sendResponse({
+      res,
+      code: 500,
+      message: "Error logging out."
+    });
   }
 };
 
 const getMe = async (req: AuthedRequest, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
-      where: {id : req.userId },
+      where: { id: req.userId },
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return sendResponse({
+        res,
+        code: 404,
+        message: "User not found"
+      });
     }
 
     const { passwordHash: _, ...safeUser } = user;
-    res.status(200).json({ success: true, data: {user: safeUser} });
-
+    sendResponse({
+      res,
+      code: 200,
+      message: "User found successfully",
+      data: safeUser,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user.", meta: error });
+    console.error(error);
+    sendResponse({
+      res,
+      code: 500,
+      message: "Error fetching user."
+    });
   }
 };
 
