@@ -73,6 +73,7 @@ const login = async (req: Request<{}, {}, LoginInput>, res: Response) => {
 
     const user = await prisma.user.findUnique({
       where: { email },
+      include: { photos : true}
     });
 
     if (!user) {
@@ -213,6 +214,7 @@ const getMe = async (req: AuthedRequest, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
+      include: { photos : true}
     });
 
     if (!user) {

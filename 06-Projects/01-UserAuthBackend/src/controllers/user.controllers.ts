@@ -134,7 +134,8 @@ const deleteUser = async (req: AuthedRequest, res: Response) => {
         name: true,
         email: true,
         photos: {
-          select: { url: true },
+          //select: { url: true },
+          include: {},
         },
       },
     });
@@ -153,7 +154,7 @@ const deleteUser = async (req: AuthedRequest, res: Response) => {
     sendResponse({
       res,
       code: 200,
-      message: "User Delete Successfully.",
+      message: "User Deleted Successfully.",
     });
   } catch (error) {
     if (
