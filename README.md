@@ -12,8 +12,8 @@ Welcome to my core engineering repository. This workspace tracks my progression 
 | **02. TypeScript (Compilation)** | Type Narrowing, Generics, Custom Component Typing | **🟢 Complete** |
 | **03. Node.js (Core Subsystems)**| Event Loop, Event Emitters, Stream IO Pipelines | **🟢 Complete** |
 | **04. Express.js (API Layer)** | MVC Structural Routing, Pipeline Middlewares | **🟢 Complete** |
-| **05. Relational Data Layer** | PostgreSQL Storage, Complex Joins, Prisma ORM | **🟡 Current Frontier** |
-| **06. Identity & Security** | Cryptographic Hashing, Stateful/Stateless JWT Auth | **🔴 Up Next** |
+| **05. Relational Data Layer** | PostgreSQL Storage, Complex Joins, Prisma ORM | **🟢 Complete** |
+| **06. Identity & Security** | Cryptographic Hashing, Stateful/Stateless JWT Auth | **🟢 Complete** |
 | **07. Production Graduation** | Unified Portfolio REST Application Execution | **🔴 Up Next** |
 | **08. Enterprise Frameworks**| NestJS, Modular Dependency Injection Patterns | **🔴 Up Next** |
 | **09. Systems Infrastructure** | Docker Multi-Stage Containerization & AWS Deploy | **🔴 Up Next** |
