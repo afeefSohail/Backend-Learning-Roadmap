@@ -1,0 +1,15 @@
+# Skip configuration for UserAuth module
+#
+# Kotlin dependencies and Gradle build options for this module can be configured here
+#build:
+#  contents:
+#    - block: 'dependencies'
+#      contents:
+#        - 'implementation("androidx.compose.runtime:runtime")'
+
+# this is a natively-compiled Skip Fuse module with all public API auto-bridged
+# bridging: true allows handwritten Kotlin (Main.kt) to instantiate public Swift types
+# like UserAuthRootView() without needing to pass a Swift_peer pointer
+skip:
+  mode: 'native'
+  bridging: true

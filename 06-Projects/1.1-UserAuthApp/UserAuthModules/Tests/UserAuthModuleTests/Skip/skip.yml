@@ -1,0 +1,7 @@
+# Skip configuration for UserAuthModuleTests module
+
+#build:
+#  contents:
+
+skip:
+  mode: 'native'

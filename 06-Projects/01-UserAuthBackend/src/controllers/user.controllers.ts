@@ -42,6 +42,7 @@ const getUser = async (req: Request<{ id: string }>, res: Response) => {
         id: true,
         name: true,
         email: true,
+        createdAt: true,
         photos: {
           //select: { url: true },
           include: {},
@@ -89,6 +90,7 @@ const updateUser = async (req: AuthedRequest, res: Response) => {
         id: true,
         name: true,
         email: true,
+        createdAt: true,
         photos: {
           //select: { url: true },
           include: {},

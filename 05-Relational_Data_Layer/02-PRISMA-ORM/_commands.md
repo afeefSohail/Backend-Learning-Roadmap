@@ -58,6 +58,9 @@
 
 `docker compose restart express-api`
 
+
+`docker compose up -d --force-recreate user-auth`
+
 # Postgres
 
 ### Log into the Postgres container:
