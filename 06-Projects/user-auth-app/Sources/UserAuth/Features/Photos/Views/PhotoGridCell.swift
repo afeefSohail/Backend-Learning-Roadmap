@@ -10,8 +10,17 @@ import SwiftUI
 struct PhotoGridCell: View {
     let photo: Photo
 
+    // Backend returns relative paths (/uploads/...) or full URLs.
+    // Resolve relative paths against the API base URL so Android uses 10.0.2.2 and iOS uses localhost.
+    private var resolvedURL: URL? {
+        if photo.url.hasPrefix("http") {
+            return URL(string: photo.url)
+        }
+        return URL(string: photo.url, relativeTo: AppConfig.apiBaseURL)?.absoluteURL
+    }
+
     var body: some View {
-        AsyncImage(url: URL(string: photo.url)) { phase in
+        AsyncImage(url: resolvedURL) { phase in
             switch phase {
             case .success(let image):
                 image

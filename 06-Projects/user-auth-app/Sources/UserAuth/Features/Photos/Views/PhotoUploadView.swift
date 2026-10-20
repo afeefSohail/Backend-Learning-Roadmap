@@ -7,18 +7,72 @@
 
 import SwiftUI
 import SkipKit
+#if !os(Android)
+import PhotosUI
+import UniformTypeIdentifiers
+
+// Data.self uses content type "public.data" which PHPickerResult doesn't provide.
+// This wrapper explicitly requests JPEG (or PNG/HEIC) so loadTransferable succeeds.
+struct PhotoImageTransfer: Transferable {
+    let data: Data
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(importedContentType: .jpeg) { PhotoImageTransfer(data: $0) }
+        DataRepresentation(importedContentType: .png) { PhotoImageTransfer(data: $0) }
+        DataRepresentation(importedContentType: UTType("public.heic")!) { PhotoImageTransfer(data: $0) }
+    }
+}
+#endif
 
 public struct PhotoUploadView: View {
     var viewModel: PhotosViewModel
     @Environment(\.dismiss) var dismiss
 
-    @State  var showSourceDialog = false
-    @State  var showLibraryPicker = false
-    @State  var showCameraPicker = false
-    @State  var selectedImageURLs: [URL] = []
-    @State  var cameraImageURL: URL?
+    @State var showSourceDialog = false
+    @State var showCameraPicker = false
+    @State var showLibraryPicker = false
+    // Camera output on both platforms; Android library output
+    @State var selectedImageURLs: [URL] = []
+    @State var cameraImageURL: URL?
+
+    #if !os(Android)
+    @State var selectedItems: [PhotosPickerItem] = []
+    // iOS library photos stored as Data directly — avoids temp-file write/read failure.
+    @State var selectedImageData: [Data] = []
+    #endif
+
+    private var selectedCount: Int {
+        #if os(Android)
+        return selectedImageURLs.count
+        #else
+        return selectedImageData.count + selectedImageURLs.count
+        #endif
+    }
 
     public var body: some View {
+        #if os(Android)
+        coreContent
+            .withMediaPicker(
+                type: .library,
+                isPresented: $showLibraryPicker,
+                allowsMultipleSelection: true,
+                selectedImageURLs: $selectedImageURLs
+            )
+        #else
+        coreContent
+            .photosPicker(
+                isPresented: $showLibraryPicker,
+                selection: $selectedItems,
+                maxSelectionCount: 10,
+                matching: .images
+            )
+            .onChange(of: selectedItems) { _, newValue in
+                Task { await loadSelectedItems(newValue) }
+            }
+        #endif
+    }
+
+    @ViewBuilder
+    private var coreContent: some View {
         NavigationStack {
             VStack(spacing: 20) {
                 Button {
@@ -39,10 +93,10 @@ public struct PhotoUploadView: View {
                     Button("Cancel", role: .cancel) {}
                 }
 
-                if !selectedImageURLs.isEmpty {
-                    Text(selectedImageURLs.count == 1
+                if selectedCount > 0 {
+                    Text(selectedCount == 1
                          ? "1 photo selected"
-                         : "\(selectedImageURLs.count) photos selected")
+                         : "\(selectedCount) photos selected")
                         .foregroundStyle(.secondary)
                 }
 
@@ -60,7 +114,7 @@ public struct PhotoUploadView: View {
                     Task { await uploadSelected() }
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(selectedImageURLs.isEmpty || viewModel.isUploading)
+                .disabled(selectedCount == 0 || viewModel.isUploading)
             }
             .padding()
             .navigationTitle("Upload Photos")
@@ -70,12 +124,6 @@ public struct PhotoUploadView: View {
                 }
             }
         }
-        .withMediaPicker(
-            type: .library,
-            isPresented: $showLibraryPicker,
-            allowsMultipleSelection: true,
-            selectedImageURLs: $selectedImageURLs
-        )
         .withMediaPicker(
             type: .camera,
             isPresented: $showCameraPicker,
@@ -89,10 +137,46 @@ public struct PhotoUploadView: View {
         }
     }
 
+    #if !os(Android)
+    private func loadSelectedItems(_ items: [PhotosPickerItem]) async {
+        guard !items.isEmpty else { return }
+        var dataArray: [Data] = []
+        for item in items {
+            if let transfer = try? await item.loadTransferable(type: PhotoImageTransfer.self) {
+                dataArray.append(transfer.data)
+            }
+        }
+        selectedImageData = dataArray
+        selectedItems = []
+    }
+    #endif
+
     private func uploadSelected() async {
-        let imageDataArray = selectedImageURLs.compactMap { try? Data(contentsOf: $0) }
+        var imageDataArray: [Data] = []
+
+        for url in selectedImageURLs {
+            do {
+                #if os(Android)
+                let data = url.scheme == "content"
+                    ? try readAndroidContentURI(url)
+                    : try Data(contentsOf: url)
+                #else
+                let data = try Data(contentsOf: url)
+                #endif
+                imageDataArray.append(data)
+            } catch {
+                viewModel.errorMessage = "Could not read photo: \(error.localizedDescription)"
+                return
+            }
+        }
+
+        #if !os(Android)
+        imageDataArray.append(contentsOf: selectedImageData)
+        #endif
+
         guard !imageDataArray.isEmpty else { return }
         await viewModel.upload(imageData: imageDataArray)
         if viewModel.errorMessage == nil { dismiss() }
     }
 }
+

@@ -14,26 +14,28 @@ public struct SplashView: View {
     public init() {}
 
     public var body: some View {
-        NavigationStack {
-            Group {
-                switch appState.authState {
-                case .checking:
-                    #if !SKIP_BRIDGE
-                    ProgressView()
-                        .controlSize(.large)
-                        .tint(.white)
-                    #else
-                    ProgressView()
-                        .tint(.white)
-                    #endif
-                case .authenticated:
-                    RootTabView()
-                case .unauthenticated:
+        // NavigationStack lives only around the login flow so MyPhotosView's
+        // own NavigationStack isn't nested (nested stacks break toolbar items on iOS).
+        Group {
+            switch appState.authState {
+            case .checking:
+                #if !SKIP_BRIDGE
+                ProgressView()
+                    .controlSize(.large)
+                    .tint(.white)
+                #else
+                ProgressView()
+                    .tint(.white)
+                #endif
+            case .authenticated:
+                RootTabView()
+            case .unauthenticated:
+                NavigationStack {
                     LoginView(appState: appState)
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.teal.ignoresSafeArea())
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.teal.ignoresSafeArea())
     }
 }

@@ -11,6 +11,8 @@
 
     <!-- Required for camera access via SkipKit's withMediaPicker(type: .camera) -->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Required on Android 13+ to read photos via the legacy storage path -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:label="${PRODUCT_NAME}"
